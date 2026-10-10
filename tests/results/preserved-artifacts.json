@@ -1,0 +1,47 @@
+[
+  {
+    "path": "ShareSafe_Conference_Paper.docx",
+    "sha256": "113e0dc92900e815f77ccb581efbe124735fef756cb189a9dae2025fd825ab3b",
+    "byte_identical": true
+  },
+  {
+    "path": "conference_template.docx",
+    "sha256": "ac021b7e6c87d1c55d876934def0869744318b9675a43083ad2416d688197f47",
+    "byte_identical": true
+  },
+  {
+    "path": "1st Mini Project Presentation-26Sept26.pptx.pptx",
+    "sha256": "db92a736ffee851ee67d0905589cde7145656f177e061b8d52fdc4b04bf4c182",
+    "byte_identical": true
+  },
+  {
+    "path": "Poster\\ShareSafe_Poster.pdf",
+    "sha256": "76daf0c3d763a4d4b8a349df4e11481cc0448208cac27abe78e462384c39b925",
+    "byte_identical": true
+  },
+  {
+    "path": "Poster\\ShareSafe_Poster.pptx",
+    "sha256": "b48cffdc34d3ffbad0db86e2fe08008dab84237606bf5bd46e6ee5b4909b4ddd",
+    "byte_identical": true
+  },
+  {
+    "path": "Poster\\ShareSafe_Poster_Preview.png",
+    "sha256": "99737222b2aa4e8437ade1ccb53d1a10b6ee725e7e08b4d5f07a85cb193bb070",
+    "byte_identical": true
+  },
+  {
+    "path": "Poster\\ShareSafe_Visual_Poster.pdf",
+    "sha256": "84e9f7775088af87f356f5e1944c0b3cea7b59f70c2dc4f30e09099902ae2082",
+    "byte_identical": true
+  },
+  {
+    "path": "Poster\\ShareSafe_Visual_Poster.pptx",
+    "sha256": "370db37766fb00e03da245352c117cf87f8cfcb08b46543fd16e04c54d66407f",
+    "byte_identical": true
+  },
+  {
+    "path": "Poster\\ShareSafe_Visual_Poster_Preview.png",
+    "sha256": "25eea43baec34194e98903037dc316e2f501a23a36888382b8b4026bc8b595e2",
+    "byte_identical": true
+  }
+]

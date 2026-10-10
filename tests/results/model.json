@@ -1,0 +1,13 @@
+{
+  "date": "2026-10-10T15:42:26.465927+00:00",
+  "model": "qwen2.5:3b",
+  "endpoint": "http://127.0.0.1:11435",
+  "passed": 4,
+  "checks": [
+    "Actual model analysis completed with grounded spans",
+    "Actual model answer matched source evidence",
+    "Unknown retrieval question abstained",
+    "Reviewed output removed supported private values"
+  ],
+  "agent_container_tested": false
+}

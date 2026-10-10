@@ -1,0 +1,583 @@
+{
+  "date": "2026-10-10T15:57:15.271656+00:00",
+  "tests_run": 143,
+  "passed": 143,
+  "skipped": 0,
+  "failures": 0,
+  "errors": 0,
+  "checks": [
+    {
+      "name": "test_bridge.BridgeTests.test_bad_host",
+      "status": "passed"
+    },
+    {
+      "name": "test_bridge.BridgeTests.test_clean_export_and_audit_no_raw_text",
+      "status": "passed"
+    },
+    {
+      "name": "test_bridge.BridgeTests.test_expired_session",
+      "status": "passed"
+    },
+    {
+      "name": "test_bridge.BridgeTests.test_extension_cors",
+      "status": "passed"
+    },
+    {
+      "name": "test_bridge.BridgeTests.test_forgotten_review_cannot_export",
+      "status": "passed"
+    },
+    {
+      "name": "test_bridge.BridgeTests.test_graph_retrieves_source",
+      "status": "passed"
+    },
+    {
+      "name": "test_bridge.BridgeTests.test_health_requires_token",
+      "status": "passed"
+    },
+    {
+      "name": "test_bridge.BridgeTests.test_inline_masks_credential",
+      "status": "passed"
+    },
+    {
+      "name": "test_bridge.BridgeTests.test_invalid_text_type",
+      "status": "passed"
+    },
+    {
+      "name": "test_bridge.BridgeTests.test_native_credential_blocks",
+      "status": "passed"
+    },
+    {
+      "name": "test_bridge.BridgeTests.test_native_image_review_gate_and_pixels",
+      "status": "passed"
+    },
+    {
+      "name": "test_bridge.BridgeTests.test_no_cache",
+      "status": "passed"
+    },
+    {
+      "name": "test_bridge.BridgeTests.test_no_remote_model_on_inline",
+      "status": "passed"
+    },
+    {
+      "name": "test_bridge.BridgeTests.test_preflight_website_denied",
+      "status": "passed"
+    },
+    {
+      "name": "test_bridge.BridgeTests.test_requested_model_failure_stops_export",
+      "status": "passed"
+    },
+    {
+      "name": "test_bridge.BridgeTests.test_retained_requires_ack",
+      "status": "passed"
+    },
+    {
+      "name": "test_bridge.BridgeTests.test_token_scopes",
+      "status": "passed"
+    },
+    {
+      "name": "test_bridge.BridgeTests.test_website_origin_denied",
+      "status": "passed"
+    },
+    {
+      "name": "test_bridge.BridgeTests.test_workflow_mapping",
+      "status": "passed"
+    },
+    {
+      "name": "test_bridge.OCRTests.test_geometry_validated",
+      "status": "passed"
+    },
+    {
+      "name": "test_bridge.OCRTests.test_native_unicode_scalar_offsets",
+      "status": "passed"
+    },
+    {
+      "name": "test_bridge.OCRTests.test_offsets_validated",
+      "status": "passed"
+    },
+    {
+      "name": "test_bridge.OCRTests.test_origin_parser",
+      "status": "passed"
+    },
+    {
+      "name": "test_core.DetectionTests.test_aadhaar",
+      "status": "passed"
+    },
+    {
+      "name": "test_core.DetectionTests.test_account_context_precedes_phone",
+      "status": "passed"
+    },
+    {
+      "name": "test_core.DetectionTests.test_card",
+      "status": "passed"
+    },
+    {
+      "name": "test_core.DetectionTests.test_currency",
+      "status": "passed"
+    },
+    {
+      "name": "test_core.DetectionTests.test_email",
+      "status": "passed"
+    },
+    {
+      "name": "test_core.DetectionTests.test_empty",
+      "status": "passed"
+    },
+    {
+      "name": "test_core.DetectionTests.test_exact_offsets_unicode",
+      "status": "passed"
+    },
+    {
+      "name": "test_core.DetectionTests.test_luhn",
+      "status": "passed"
+    },
+    {
+      "name": "test_core.DetectionTests.test_pan",
+      "status": "passed"
+    },
+    {
+      "name": "test_core.DetectionTests.test_person_label",
+      "status": "passed"
+    },
+    {
+      "name": "test_core.DetectionTests.test_phone",
+      "status": "passed"
+    },
+    {
+      "name": "test_core.DetectionTests.test_private_key_blocks",
+      "status": "passed"
+    },
+    {
+      "name": "test_core.DetectionTests.test_public_text",
+      "status": "passed"
+    },
+    {
+      "name": "test_core.DetectionTests.test_secret_blocks",
+      "status": "passed"
+    },
+    {
+      "name": "test_core.DetectionTests.test_size_limit",
+      "status": "passed"
+    },
+    {
+      "name": "test_core.GraphTests.test_chunks_preserve_every_character",
+      "status": "passed"
+    },
+    {
+      "name": "test_core.GraphTests.test_components_deterministic",
+      "status": "passed"
+    },
+    {
+      "name": "test_core.GraphTests.test_cooccurrence_is_not_confidentiality",
+      "status": "passed"
+    },
+    {
+      "name": "test_core.GraphTests.test_graph_edge_provenance",
+      "status": "passed"
+    },
+    {
+      "name": "test_core.GraphTests.test_graph_propagates_distant_alias",
+      "status": "passed"
+    },
+    {
+      "name": "test_core.GraphTests.test_graph_retrieval_finds_linked_context",
+      "status": "passed"
+    },
+    {
+      "name": "test_core.GraphTests.test_public_project_not_confidential",
+      "status": "passed"
+    },
+    {
+      "name": "test_core.GraphTests.test_unknown_query_abstains",
+      "status": "passed"
+    },
+    {
+      "name": "test_core.ModelValidationTests.test_answer_invalid_source_rejected",
+      "status": "passed"
+    },
+    {
+      "name": "test_core.ModelValidationTests.test_answer_invented_quote_rejected",
+      "status": "passed"
+    },
+    {
+      "name": "test_core.ModelValidationTests.test_answer_valid_quote",
+      "status": "passed"
+    },
+    {
+      "name": "test_core.ModelValidationTests.test_hallucinated_entity_rejected",
+      "status": "passed"
+    },
+    {
+      "name": "test_core.ModelValidationTests.test_invalid_model_schema",
+      "status": "passed"
+    },
+    {
+      "name": "test_core.ModelValidationTests.test_model_does_not_expand_reliable_rule_span",
+      "status": "passed"
+    },
+    {
+      "name": "test_core.ModelValidationTests.test_model_valid_quote_retained",
+      "status": "passed"
+    },
+    {
+      "name": "test_core.PolicyTests.test_ai_failure_prevents_export",
+      "status": "passed"
+    },
+    {
+      "name": "test_core.PolicyTests.test_allow_list",
+      "status": "passed"
+    },
+    {
+      "name": "test_core.PolicyTests.test_allow_policy",
+      "status": "passed"
+    },
+    {
+      "name": "test_core.PolicyTests.test_confidential_term",
+      "status": "passed"
+    },
+    {
+      "name": "test_core.PolicyTests.test_invalid_action",
+      "status": "passed"
+    },
+    {
+      "name": "test_core.PolicyTests.test_invalid_category",
+      "status": "passed"
+    },
+    {
+      "name": "test_core.PolicyTests.test_invalid_terms",
+      "status": "passed"
+    },
+    {
+      "name": "test_core.PolicyTests.test_prompt_scaffold_no_invented_facts",
+      "status": "passed"
+    },
+    {
+      "name": "test_core.PolicyTests.test_stable_pseudonyms",
+      "status": "passed"
+    },
+    {
+      "name": "test_core.PolicyTests.test_unchecked_requires_ack",
+      "status": "passed"
+    },
+    {
+      "name": "test_core.PolicyTests.test_unknown_decision",
+      "status": "passed"
+    },
+    {
+      "name": "test_core.PolicyTests.test_warn_requires_ack",
+      "status": "passed"
+    },
+    {
+      "name": "test_files.FileTests.test_bad_pdf",
+      "status": "passed"
+    },
+    {
+      "name": "test_files.FileTests.test_docx_split_runs_and_tables",
+      "status": "passed"
+    },
+    {
+      "name": "test_files.FileTests.test_empty_upload",
+      "status": "passed"
+    },
+    {
+      "name": "test_files.FileTests.test_exif_and_color_profile_metadata_not_carried_into_png",
+      "status": "passed"
+    },
+    {
+      "name": "test_files.FileTests.test_export_docx_no_hidden_source",
+      "status": "passed"
+    },
+    {
+      "name": "test_files.FileTests.test_image_pixels_permanently_redacted",
+      "status": "passed"
+    },
+    {
+      "name": "test_files.FileTests.test_invalid_rectangle",
+      "status": "passed"
+    },
+    {
+      "name": "test_files.FileTests.test_pdf_import_and_clean_export",
+      "status": "passed"
+    },
+    {
+      "name": "test_files.FileTests.test_pdf_unicode_escaped_not_lost",
+      "status": "passed"
+    },
+    {
+      "name": "test_files.FileTests.test_png_metadata_removed",
+      "status": "passed"
+    },
+    {
+      "name": "test_files.FileTests.test_scanned_pdf_no_exportable_text",
+      "status": "passed"
+    },
+    {
+      "name": "test_files.FileTests.test_unsupported_type",
+      "status": "passed"
+    },
+    {
+      "name": "test_files.FileTests.test_utf8_import",
+      "status": "passed"
+    },
+    {
+      "name": "test_files.FileTests.test_wrong_binary",
+      "status": "passed"
+    },
+    {
+      "name": "test_inline.InlinePolicyTests.test_browser_cannot_update_policy",
+      "status": "passed"
+    },
+    {
+      "name": "test_inline.InlinePolicyTests.test_clear_all_invalidates_review",
+      "status": "passed"
+    },
+    {
+      "name": "test_inline.InlinePolicyTests.test_quick_glossary_applies_to_browser",
+      "status": "passed"
+    },
+    {
+      "name": "test_project.ProjectTests.test_actual_export_rescanned_after_plan_tampering",
+      "status": "passed"
+    },
+    {
+      "name": "test_project.ProjectTests.test_all_excluded_folder_rejected",
+      "status": "passed"
+    },
+    {
+      "name": "test_project.ProjectTests.test_binary_masquerading_as_text_excluded",
+      "status": "passed"
+    },
+    {
+      "name": "test_project.ProjectTests.test_consistent_replacement_across_files_and_prompt",
+      "status": "passed"
+    },
+    {
+      "name": "test_project.ProjectTests.test_cross_file_explicit_alias_propagation",
+      "status": "passed"
+    },
+    {
+      "name": "test_project.ProjectTests.test_duplicate_case_paths_rejected",
+      "status": "passed"
+    },
+    {
+      "name": "test_project.ProjectTests.test_duplicate_json_keys_after_replacement_blocked",
+      "status": "passed"
+    },
+    {
+      "name": "test_project.ProjectTests.test_email_in_filename_is_removed",
+      "status": "passed"
+    },
+    {
+      "name": "test_project.ProjectTests.test_empty_utf8_file_preserved",
+      "status": "passed"
+    },
+    {
+      "name": "test_project.ProjectTests.test_environment_lookup_kept_as_code",
+      "status": "passed"
+    },
+    {
+      "name": "test_project.ProjectTests.test_export_has_no_original_filesystem_metadata",
+      "status": "passed"
+    },
+    {
+      "name": "test_project.ProjectTests.test_generated_filename_collision_rejected",
+      "status": "passed"
+    },
+    {
+      "name": "test_project.ProjectTests.test_generated_readme_is_access_guidance_not_sandbox_claim",
+      "status": "passed"
+    },
+    {
+      "name": "test_project.ProjectTests.test_invalid_glossary_replacement_rejected",
+      "status": "passed"
+    },
+    {
+      "name": "test_project.ProjectTests.test_invalid_utf8_excluded",
+      "status": "passed"
+    },
+    {
+      "name": "test_project.ProjectTests.test_links_fail_closed_without_following",
+      "status": "passed"
+    },
+    {
+      "name": "test_project.ProjectTests.test_local_paths_and_endpoint_values_removed",
+      "status": "passed"
+    },
+    {
+      "name": "test_project.ProjectTests.test_new_detectable_value_in_export_is_also_blocked",
+      "status": "passed"
+    },
+    {
+      "name": "test_project.ProjectTests.test_no_model_or_network_invocation",
+      "status": "passed"
+    },
+    {
+      "name": "test_project.ProjectTests.test_private_files_history_agent_config_binaries_excluded",
+      "status": "passed"
+    },
+    {
+      "name": "test_project.ProjectTests.test_private_mapping_and_original_paths_not_in_manifest",
+      "status": "passed"
+    },
+    {
+      "name": "test_project.ProjectTests.test_python_syntax_damage_blocks_preparation",
+      "status": "passed"
+    },
+    {
+      "name": "test_project.ProjectTests.test_real_fixture_secret_and_prompt_removed_from_actual_zip",
+      "status": "passed"
+    },
+    {
+      "name": "test_project.ProjectTests.test_renamed_path_collision_rejected",
+      "status": "passed"
+    },
+    {
+      "name": "test_project.ProjectTests.test_review_gate_cannot_be_bypassed_with_truthy_value",
+      "status": "passed"
+    },
+    {
+      "name": "test_project.ProjectTests.test_secret_assignment_variants_detected",
+      "status": "passed"
+    },
+    {
+      "name": "test_project.ProjectTests.test_sensitive_path_and_import_are_renamed_consistently",
+      "status": "passed"
+    },
+    {
+      "name": "test_project.ProjectTests.test_size_limit_blocks_preparation",
+      "status": "passed"
+    },
+    {
+      "name": "test_project.ProjectTests.test_source_files_not_modified_and_replica_python_actually_runs",
+      "status": "passed"
+    },
+    {
+      "name": "test_project.ProjectTests.test_traversal_absolute_ads_and_windows_devices_rejected",
+      "status": "passed"
+    },
+    {
+      "name": "test_project.ProjectTests.test_unknown_language_has_no_false_syntax_claim",
+      "status": "passed"
+    },
+    {
+      "name": "test_project.ProjectTests.test_unparseable_input_reported_without_syntax_assurance",
+      "status": "passed"
+    },
+    {
+      "name": "test_project.ProjectTests.test_unsupported_file_content_need_not_be_read",
+      "status": "passed"
+    },
+    {
+      "name": "test_workspace.WorkspaceTests.test_agent_rejects_absolute_tool_path",
+      "status": "passed"
+    },
+    {
+      "name": "test_workspace.WorkspaceTests.test_agent_rejects_sensitive_write_before_tool",
+      "status": "passed"
+    },
+    {
+      "name": "test_workspace.WorkspaceTests.test_agent_withholds_sensitive_tool_output_from_model",
+      "status": "passed"
+    },
+    {
+      "name": "test_workspace.WorkspaceTests.test_binary_quarantines",
+      "status": "passed"
+    },
+    {
+      "name": "test_workspace.WorkspaceTests.test_bounded_output_stops_flooding",
+      "status": "passed"
+    },
+    {
+      "name": "test_workspace.WorkspaceTests.test_bounded_timeout",
+      "status": "passed"
+    },
+    {
+      "name": "test_workspace.WorkspaceTests.test_command_isolation_flags_and_only_one_mount",
+      "status": "passed"
+    },
+    {
+      "name": "test_workspace.WorkspaceTests.test_concurrent_execution_rejected",
+      "status": "passed"
+    },
+    {
+      "name": "test_workspace.WorkspaceTests.test_deletion_confirms_and_preserves_source",
+      "status": "passed"
+    },
+    {
+      "name": "test_workspace.WorkspaceTests.test_extended_credentials",
+      "status": "passed"
+    },
+    {
+      "name": "test_workspace.WorkspaceTests.test_generic_values_not_sensitive",
+      "status": "passed"
+    },
+    {
+      "name": "test_workspace.WorkspaceTests.test_hard_link_quarantines",
+      "status": "passed"
+    },
+    {
+      "name": "test_workspace.WorkspaceTests.test_invalid_argv_and_id",
+      "status": "passed"
+    },
+    {
+      "name": "test_workspace.WorkspaceTests.test_local_docker_socket_explicit",
+      "status": "passed"
+    },
+    {
+      "name": "test_workspace.WorkspaceTests.test_materialized_copy_verified_private_map_absent",
+      "status": "passed"
+    },
+    {
+      "name": "test_workspace.WorkspaceTests.test_new_secret_quarantines",
+      "status": "passed"
+    },
+    {
+      "name": "test_workspace.WorkspaceTests.test_no_host_shell_fallback",
+      "status": "passed"
+    },
+    {
+      "name": "test_workspace.WorkspaceTests.test_plans_expire",
+      "status": "passed"
+    },
+    {
+      "name": "test_workspace.WorkspaceTests.test_prepare_source_unchanged",
+      "status": "passed"
+    },
+    {
+      "name": "test_workspace.WorkspaceTests.test_private_storage_not_source",
+      "status": "passed"
+    },
+    {
+      "name": "test_workspace.WorkspaceTests.test_relative_source_rejected",
+      "status": "passed"
+    },
+    {
+      "name": "test_workspace.WorkspaceTests.test_residual_original_value_quarantines",
+      "status": "passed"
+    },
+    {
+      "name": "test_workspace.WorkspaceTests.test_review_required",
+      "status": "passed"
+    },
+    {
+      "name": "test_workspace.WorkspaceTests.test_root_execution_rejected",
+      "status": "passed"
+    },
+    {
+      "name": "test_workspace.WorkspaceTests.test_shutdown_cleans_tracked_containers_and_rejects_jobs",
+      "status": "passed"
+    },
+    {
+      "name": "test_workspace.WorkspaceTests.test_soft_link_quarantines",
+      "status": "passed"
+    },
+    {
+      "name": "test_workspace.WorkspaceTests.test_swift_and_plist_source_included_and_cleaned",
+      "status": "passed"
+    },
+    {
+      "name": "test_workspace.WorkspaceTests.test_unknown_private_term_requires_glossary_review",
+      "status": "passed"
+    }
+  ],
+  "scope": "Portable engine, real loopback HTTP, file exports and container configuration; no macOS GUI or actual Docker isolation claim"
+}

@@ -1,0 +1,9 @@
+.venv/
+build/
+NativeApp/.build/
+NativeApp/.swiftpm/
+__pycache__/
+*.pyc
+.DS_Store
+tests/tmp/
+*.log

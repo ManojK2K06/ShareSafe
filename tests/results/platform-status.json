@@ -1,0 +1,14 @@
+{
+  "recorded_date": "2026-10-10",
+  "portable_backend": {"passed": 143, "report": "backend.json"},
+  "browser": {"passed": 19, "real_browser_and_engine_workflows": 13, "mock_transport_permission_checks": 6, "report": "browser.json"},
+  "local_model": {"passed": 4, "model": "qwen2.5:3b", "agent_container_tested": false, "report": "model.json"},
+  "javascript_syntax": "passed",
+  "build_script_syntax": "passed_with_installed_Git_Bash",
+  "app_plist_xml": "parsed",
+  "native_swift_compilation": {"status": "not_run", "reason": "Windows host has no Swift/macOS SDK"},
+  "native_ui_accessibility_vision_keychain_login": {"status": "not_run", "reason": "Requires macOS acceptance run"},
+  "safari_packaging_installation": {"status": "not_run", "reason": "Requires Xcode/Safari on macOS"},
+  "actual_docker_isolation": {"status": "not_run", "reason": "Docker CLI is present but its daemon is unavailable; container flags and agent contracts were tested separately"},
+  "protected_artifacts": {"verified_byte_identical": 9, "report": "preserved-artifacts.json"}
+}

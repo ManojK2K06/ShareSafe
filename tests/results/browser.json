@@ -1,0 +1,85 @@
+{
+  "date": "2026-10-10T15:30:14.767Z",
+  "browser": "154.0.4258.62",
+  "domTransport": "real local engine",
+  "backgroundTransport": "mock permission tests",
+  "passed": 19,
+  "checks": [
+    {
+      "name": "Enter pauses before the page sends",
+      "passed": true
+    },
+    {
+      "name": "Real engine cleans email and credential in preview",
+      "passed": true
+    },
+    {
+      "name": "Explicit replacement updates the actual editor",
+      "passed": true
+    },
+    {
+      "name": "Approved draft sends only on the next user action",
+      "passed": true
+    },
+    {
+      "name": "Edited draft needs a fresh review",
+      "passed": true
+    },
+    {
+      "name": "Shift Enter remains a newline",
+      "passed": true
+    },
+    {
+      "name": "Draft changes during review invalidate the result",
+      "passed": true
+    },
+    {
+      "name": "Disconnected app does not silently approve sending",
+      "passed": true
+    },
+    {
+      "name": "Original bypass requires explicit acknowledgement",
+      "passed": true
+    },
+    {
+      "name": "Approved button click and its form submission are one send",
+      "passed": true
+    },
+    {
+      "name": "Enter outside the editor is not intercepted",
+      "passed": true
+    },
+    {
+      "name": "Original attachment is paused for separate review",
+      "passed": true
+    },
+    {
+      "name": "Explicit reviewed attachment selection can proceed",
+      "passed": true
+    },
+    {
+      "name": "Background transport is restricted to loopback (mock transport)",
+      "passed": true
+    },
+    {
+      "name": "Foreign extension sender rejected",
+      "passed": true
+    },
+    {
+      "name": "Unapproved custom domain rejected",
+      "passed": true
+    },
+    {
+      "name": "Approved custom AI domain accepted",
+      "passed": true
+    },
+    {
+      "name": "Content scripts cannot impersonate extension settings",
+      "passed": true
+    },
+    {
+      "name": "Oversized prompt rejected before transport",
+      "passed": true
+    }
+  ]
+}

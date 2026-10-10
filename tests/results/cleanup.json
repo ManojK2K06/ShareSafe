@@ -1,0 +1,10 @@
+{
+  "executed_at_utc": "2026-10-10T16:00:30.9842817Z",
+  "removed_target": "Codebase/tests/tmp",
+  "removed_files": 5,
+  "removed_bytes": 50348.0,
+  "paper_and_posters_byte_identical": true,
+  "protected_artifacts_report": "preserved-artifacts.json",
+  "test_results_preserved": true,
+  "native_source_preserved": true
+}

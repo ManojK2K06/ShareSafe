@@ -1,0 +1,23 @@
+[
+  {
+    "source": "sharesafe/core.py",
+    "source_sha256": "425339f8ef178164cb02f6a6a318fd1babf9549a10cd660796e9e0b168509ca8",
+    "portable_copy": "backend/sharesafe_engine/core.py",
+    "portable_sha256": "26edfcf968086dd8341b264df2d2bc551631ecd33fadf496fb40dea399bd754e",
+    "notes": "Adapted in Codebase for native OCR, additional credential checks and Apple source-file support; original module unchanged."
+  },
+  {
+    "source": "sharesafe/files.py",
+    "source_sha256": "006366ff699e60868ea8277def4438e59d2a7b88abd36e251ca937b6760da1bf",
+    "portable_copy": "backend/sharesafe_engine/files.py",
+    "portable_sha256": "570d9d4d8ef6ba341db05f492d88a958384bad72428a2c000ba9810efa41bd86",
+    "notes": "Adapted in Codebase for native OCR, additional credential checks and Apple source-file support; original module unchanged."
+  },
+  {
+    "source": "sharesafe/project.py",
+    "source_sha256": "9ec0c2df42c4333bdccd99d55b0d4f89983aa35c94e29ad6912819cbf8f8b21c",
+    "portable_copy": "backend/sharesafe_engine/project.py",
+    "portable_sha256": "c5592f7bd11822dde2fd396756abb69fcbd3877a40f7e6a8c1ee1813570a4c54",
+    "notes": "Adapted in Codebase for native OCR, additional credential checks and Apple source-file support; original module unchanged."
+  }
+]

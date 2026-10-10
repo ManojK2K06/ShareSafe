@@ -1,0 +1,16 @@
+{
+  "manifest_version": 3,
+  "name": "ShareSafe Prompt Review",
+  "version": "0.1.0",
+  "description": "Review AI prompts locally with the paired ShareSafe macOS app.",
+  "permissions": ["storage", "activeTab", "scripting"],
+  "host_permissions": ["http://127.0.0.1:8766/*"],
+  "optional_host_permissions": ["https://*/*"],
+  "background": {"service_worker": "background.js"},
+  "action": {"default_popup": "popup.html", "default_title": "ShareSafe"},
+  "content_scripts": [{
+    "matches": ["https://chatgpt.com/*", "https://chat.openai.com/*", "https://claude.ai/*", "https://gemini.google.com/*", "https://chat.deepseek.com/*", "https://chat.z.ai/*", "https://z.ai/*"],
+    "js": ["content.js"], "run_at": "document_start"
+  }],
+  "content_security_policy": {"extension_pages": "script-src 'self'; object-src 'none'"}
+}

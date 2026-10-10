@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0"><dict>
+<key>CFBundleExecutable</key><string>ShareSafe</string>
+<key>CFBundleIdentifier</key><string>org.sharesafe.mac</string>
+<key>CFBundleName</key><string>ShareSafe</string>
+<key>CFBundleDisplayName</key><string>ShareSafe</string>
+<key>CFBundlePackageType</key><string>APPL</string>
+<key>CFBundleShortVersionString</key><string>0.1.0</string>
+<key>CFBundleVersion</key><string>1</string>
+<key>LSMinimumSystemVersion</key><string>14.0</string>
+<key>LSUIElement</key><true/>
+<key>NSHighResolutionCapable</key><true/>
+<key>NSAccessibilityUsageDescription</key><string>ShareSafe offers local review of editable prompts in the AI applications you enable.</string>
+<key>NSDocumentsFolderUsageDescription</key><string>ShareSafe reads documents and project folders you choose for local privacy review.</string>
+<key>NSDesktopFolderUsageDescription</key><string>ShareSafe reads project folders and files you choose on your Desktop.</string>
+<key>NSDownloadsFolderUsageDescription</key><string>ShareSafe imports documents you choose from Downloads.</string>
+</dict></plist>
