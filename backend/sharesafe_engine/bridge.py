@@ -75,7 +75,7 @@ def extension_origin(origin):
 
 def make_handler(state):
     class Handler(BaseHTTPRequestHandler):
-        server_version='ShareSafeMac/0.1'
+        server_version='ShareSafe/0.2'
         def setup(self):
             super().setup();self.connection.settimeout(10)
         def log_message(self,*args):pass
@@ -134,8 +134,12 @@ def make_handler(state):
                     state.audit('browser_review',findings=len(result['findings']),redacted=report['redacted'])
                     return self.reply({'text':clean,'findings':[f.serialize(result['text']) for f in result['findings']],
                                        'source_hash':result['sha256'],'report':report,'mode':'local_rules_and_graph'})
+                if path=='/v1/shutdown':
+                    self.reply({'ok':True})
+                    threading.Thread(target=self.server.shutdown,daemon=True).start()
+                    return
                 if path=='/v1/inline/policy':
-                    state.inline_policy=Policy.parse({'actions':{'CREDENTIAL':'mask'},'use_model':False,
+                    state.inline_policy=Policy.parse({'actions':body.get('actions',{'CREDENTIAL':'mask'}),'use_model':False,
                         'replacements':body.get('replacements',{}),'confidential_terms':body.get('confidential_terms',[]),
                         'allow_terms':body.get('allow_terms',[])})
                     state.audit('inline_policy',glossary_terms=len(state.inline_policy.replacements))
@@ -184,6 +188,10 @@ def make_handler(state):
                     result=state.workspaces.local_agent(body.get('workspace_id'),model);state.audit('local_agent',steps=len(result['steps']),verified=result['verification']['passed'])
                     return self.reply(result)
                 if path=='/v1/workspace/delete':state.workspaces.remove(body.get('workspace_id'),body.get('confirmed'));return self.reply({'ok':True})
+                if path=='/v1/workspace/export':
+                    data,report=state.workspaces.export(body.get('workspace_id'),body.get('reviewed'))
+                    state.audit('sandbox_export',files=len(report['files']))
+                    return self.reply({'data':base64.b64encode(data).decode(),'name':'sharesafe-sandbox-result.zip','report':report})
                 if path not in {'/v1/query','/v1/preview','/v1/export'}:return self.reply({'error':'Not found'},404)
                 record=state.get(body.get('session_id'));result=record['result'];asset=record['asset']
                 if path=='/v1/query':
@@ -209,6 +217,30 @@ def make_handler(state):
             except Exception:return self.reply({'error':'Local operation failed. No output was approved; check dependencies and retry.'},500)
     return Handler
 
+def watch_parent(parent_pid,shutdown):
+    """Hold a Windows process handle so PID reuse cannot orphan the engine."""
+    if os.name=='nt':
+        import ctypes
+        from ctypes import wintypes
+        kernel=ctypes.WinDLL('kernel32',use_last_error=True)
+        kernel.OpenProcess.argtypes=[wintypes.DWORD,wintypes.BOOL,wintypes.DWORD]
+        kernel.OpenProcess.restype=wintypes.HANDLE
+        kernel.WaitForSingleObject.argtypes=[wintypes.HANDLE,wintypes.DWORD]
+        kernel.WaitForSingleObject.restype=wintypes.DWORD
+        kernel.CloseHandle.argtypes=[wintypes.HANDLE]
+        handle=kernel.OpenProcess(0x00100000,False,parent_pid) # SYNCHRONIZE only
+        if not handle:shutdown();return
+        try:kernel.WaitForSingleObject(handle,0xFFFFFFFF)
+        finally:kernel.CloseHandle(handle)
+        shutdown()
+    else:
+        while True:
+            time.sleep(2)
+            try:os.kill(parent_pid,0)
+            except ProcessLookupError:shutdown();return
+            except PermissionError:continue
+
+
 def main():
     parser=argparse.ArgumentParser();parser.add_argument('--config',type=Path,required=True);parser.add_argument('--data-dir',type=Path,required=True)
     parser.add_argument('--parent-pid',type=int)
@@ -220,13 +252,6 @@ def main():
     def stop(*_):threading.Thread(target=server.shutdown,daemon=True).start()
     signal.signal(signal.SIGTERM,stop)
     if args.parent_pid:
-        if os.name!='posix':raise ValueError('Parent monitoring is supported by the packaged macOS service')
-        def watch_parent():
-            while True:
-                time.sleep(2)
-                try:os.kill(args.parent_pid,0)
-                except ProcessLookupError:server.shutdown();return
-                except PermissionError:continue
-        threading.Thread(target=watch_parent,daemon=True).start()
+        threading.Thread(target=watch_parent,args=(args.parent_pid,server.shutdown),daemon=True).start()
     try:server.serve_forever()
     finally:state.workspaces.close();server.server_close()

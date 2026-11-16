@@ -1,4 +1,4 @@
-import json,os,subprocess,sys,tempfile,unittest
+import io,json,os,subprocess,sys,tempfile,unittest,zipfile
 from pathlib import Path
 from unittest.mock import patch
 from sharesafe_engine.workspace import Workspaces,bounded_process,suspicious,SAFE_ENV
@@ -43,6 +43,22 @@ class WorkspaceTests(unittest.TestCase):
         self.assertFalse(self.manager.verify(wid)['passed'])
     def test_hard_link_quarantines(self):
         wid=self.create();os.link(self.source/'main.py',self.manager.root/wid/'link.py');self.assertFalse(self.manager.verify(wid)['passed'])
+    def test_result_export_requires_review_and_keeps_registry_private(self):
+        wid=self.create()
+        with self.assertRaises(ValueError):self.manager.export(wid,False)
+        data,report=self.manager.export(wid,True)
+        with zipfile.ZipFile(io.BytesIO(data)) as archive:
+            self.assertTrue(report['passed']);self.assertTrue(archive.namelist())
+            for name in archive.namelist():
+                self.assertNotIn('private-registry',name);self.assertNotIn(b'fixture-secret',archive.read(name))
+    def test_quarantined_result_export_blocked(self):
+        wid=self.create();(self.manager.root/wid/'new.txt').write_text('fixture-secret-9328')
+        with self.assertRaises(ValueError):self.manager.export(wid,True)
+    def test_running_workspace_cannot_export(self):
+        wid=self.create();self.manager.acquire(wid)
+        try:
+            with self.assertRaises(ValueError):self.manager.export(wid,True)
+        finally:self.manager.release(wid)
     def test_command_isolation_flags_and_only_one_mount(self):
         wid=self.create();args=self.manager.arguments(wid,['python','main.py'])
         for item in ['none','--read-only','ALL','no-new-privileges','64','512m','--user','--cpus']:self.assertIn(item,args)

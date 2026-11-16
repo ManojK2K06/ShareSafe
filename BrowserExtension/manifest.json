@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "ShareSafe Prompt Review",
-  "version": "0.1.0",
-  "description": "Review AI prompts locally with the paired ShareSafe macOS app.",
+  "version": "0.2.0",
+  "description": "Review AI prompts locally with the paired ShareSafe Windows or macOS app.",
   "permissions": ["storage", "activeTab", "scripting"],
   "host_permissions": ["http://127.0.0.1:8766/*"],
   "optional_host_permissions": ["https://*/*"],

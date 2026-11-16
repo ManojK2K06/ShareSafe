@@ -5,7 +5,7 @@ credential directory, Docker socket, host environment or network is exposed.
 Unknown sensitive information cannot be proved absent by a finite scanner.
 """
 from __future__ import annotations
-import hashlib,json,os,re,secrets,shutil,stat,subprocess,threading,time
+import hashlib,io,json,os,re,secrets,shutil,stat,subprocess,threading,time,zipfile
 from pathlib import Path
 from .core import Policy,GraphIndex,rule_findings,LocalModel
 from .project import safe_path,prepare_project,folder_entries,export_project,_extra_values,AGENT_README,MAX_BYTES,MAX_INVENTORY
@@ -13,6 +13,10 @@ from .project import safe_path,prepare_project,folder_entries,export_project,_ex
 IMAGE='sharesafe-agent:local'
 SAFE_ENV={'PATH':os.environ.get('PATH',''),'HOME':os.environ.get('HOME','')}
 SAFE_ENV={k:v for k,v in SAFE_ENV.items() if v}
+if os.name=='nt':
+    # Required by Win32 process creation and Docker Desktop credential/config discovery.
+    # These are CLI environment values, never container --env values.
+    SAFE_ENV.update({k:os.environ[k] for k in ('SystemRoot','WINDIR','USERPROFILE','LOCALAPPDATA','APPDATA','TEMP','TMP') if k in os.environ})
 MAX_OUTPUT=24_000
 
 def bounded_process(args,timeout,env=SAFE_ENV,input=None):
@@ -45,6 +49,10 @@ def private_json(path:Path,obj):
     if os.name!='nt':path.chmod(0o600)
 
 def digest(data:bytes):return hashlib.sha256(data).hexdigest()
+
+def is_link(path):
+    info=path.lstat()
+    return stat.S_ISLNK(info.st_mode) or bool(getattr(info,'st_file_attributes',0)&getattr(stat,'FILE_ATTRIBUTE_REPARSE_POINT',0))
 
 def suspicious(text,known=(),allowed=()):
     folded=text.casefold();allowed={x.casefold() for x in allowed}
@@ -96,7 +104,7 @@ class Workspaces:
             now=time.monotonic();self.plans={k:v for k,v in self.plans.items() if now-v['created']<1800}
             if len(self.plans)>=3:self.plans.pop(next(iter(self.plans)))
             self.plans[sid]={'created':now,'plan':plan}
-        return {'project_id':sid,'report':plan['report'],'prompt':plan['prompt'],
+        return {'project_id':sid,'report':plan['report'],'prompt':plan['prompt'],'excluded':plan['excluded'],
                 'files':[{'path':f['path'],'text':f['text'],'syntax':f['syntax']} for f in plan['files']]}
 
     def plan(self,sid):
@@ -137,23 +145,23 @@ class Workspaces:
     def record(self,wid):
         if not isinstance(wid,str) or not re.fullmatch(r'[a-f0-9]{32}',wid):raise ValueError('Invalid workspace identifier')
         path=self.registry/(wid+'.json')
-        if path.is_symlink():raise ValueError('Invalid workspace registry')
+        if path.exists() and is_link(path):raise ValueError('Invalid workspace registry')
         try:record=json.loads(path.read_text(encoding='utf-8'))
         except OSError:raise ValueError('Unknown workspace') from None
         if not record.get('reviewed'):raise ValueError('Workspace review is required')
         destination=self.root/wid
-        if destination.is_symlink() or not destination.is_dir() or destination.resolve().parent!=self.root.resolve():
+        if not destination.is_dir() or is_link(destination) or destination.resolve().parent!=self.root.resolve():
             raise ValueError('Workspace path escaped storage')
         return record,destination
 
     def verify(self,wid):
         record,destination=self.record(wid);hashes={};failures=[];total=0
         for current,dirs,files in os.walk(destination,followlinks=False):
-            for name in dirs:
-                if (Path(current)/name).is_symlink():failures.append('link')
+            for name in list(dirs):
+                if is_link(Path(current)/name):failures.append('link');dirs.remove(name)
             for name in files:
                 path=Path(current)/name;rel=path.relative_to(destination).as_posix();info=path.lstat()
-                if not stat.S_ISREG(info.st_mode) or info.st_nlink>1:failures.append('non_regular_file');continue
+                if not stat.S_ISREG(info.st_mode) or is_link(path) or info.st_nlink>1:failures.append('non_regular_file');continue
                 if info.st_size>MAX_BYTES:failures.append('oversize_file');continue
                 total+=info.st_size
                 if len(hashes)>=MAX_INVENTORY or total>MAX_BYTES:failures.append('workspace_size_limit');break
@@ -177,8 +185,25 @@ class Workspaces:
             except (ValueError,OSError,KeyError):continue
         return results
 
+    def export(self,wid,reviewed):
+        if reviewed is not True:raise ValueError('Review the resulting sandbox files before exporting')
+        self.acquire(wid)
+        try:
+            verification=self.verify(wid)
+            if not verification['passed']:raise ValueError('Quarantined workspace cannot be exported')
+            _,destination=self.record(wid);buffer=io.BytesIO()
+            with zipfile.ZipFile(buffer,'w',compression=zipfile.ZIP_DEFLATED) as archive:
+                for relative,expected in verification['hashes'].items():
+                    path=destination/safe_path(relative)
+                    if is_link(path) or path.stat().st_nlink>1:raise ValueError('Workspace changed during export')
+                    data=path.read_bytes()
+                    if digest(data)!=expected:raise ValueError('Workspace changed during export; verify again')
+                    archive.writestr('agent-workspace/'+relative,data)
+            return buffer.getvalue(),verification
+        finally:self.release(wid)
+
     def docker_status(self):
-        if not self.docker:return {'ready':False,'message':'Install and start Docker Desktop on the Mac'}
+        if not self.docker:return {'ready':False,'message':'Install and start Docker Desktop with Linux containers'}
         try:
             result=subprocess.run(self.client()+['image','inspect',IMAGE],capture_output=True,timeout=8,env=SAFE_ENV)
             return {'ready':result.returncode==0,'message':'Sandbox image ready' if result.returncode==0 else 'Start Docker and build sharesafe-agent:local'}

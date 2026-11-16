@@ -1,4 +1,23 @@
-# ShareSafe for macOS — detailed MVP codebase
+# ShareSafe for Windows and macOS
+
+## Windows application
+
+The Windows port is in `WindowsApp/`. It provides a background tray application, optional launch at sign-in, advisory desktop prompt overlays using Windows UI Automation, saved privacy environments, local document/image review, DPAPI encrypted exports, and project preparation plus Docker sandbox controls. Chrome/Edge use the shared `BrowserExtension/` prompt overlay.
+
+This checkout has a compiled development executable. Quit an older running ShareSafe test instance through its tray menu, then double-click **Start-ShareSafe.cmd**. Closing the main window keeps the app running; Quit stops it. Enable desktop monitoring and explicitly list allowed executable names in the active environment before expecting app overlays.
+
+For a fresh build:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts\build-windows.ps1 -Python python
+.\Start-ShareSafe.cmd
+```
+
+Read the complete [Windows end-to-end architecture](docs/WINDOWS_ARCHITECTURE.md) and [Windows build/acceptance guide](docs/WINDOWS_ACCEPTANCE.md). The executable requires the local engine venv in this source build; the optional self-contained packaging path is provided but was not built here. Desktop overlays depend on app accessibility and do not intercept every Send. Saved privacy environments are distinct from actual execution sandboxes.
+
+Measured Windows evidence: native compilation; direct desktop review/preview/vault/background smoke checks; **149 passed, one skipped** in the restricted engine suite, with HTTP handlers exercised in memory. Real shell TCP tests were blocked by this managed host's loopback restrictions. Docker isolation, model execution, native OCR and per-app overlay acceptance remain separate checks; the Docker daemon was unavailable. Existing Mac measurements below are historical and are not substituted for Windows acceptance.
+
+## macOS application
 
 This folder contains the new Apple desktop application source, the browser extension, the portable local review engine and the restricted agent workspace controller. The macOS interface uses SwiftUI and AppKit; image OCR uses Apple Vision; vault encryption uses CryptoKit with a Keychain key.
 
