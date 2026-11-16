@@ -1,5 +1,7 @@
 # ShareSafe for Windows and macOS
 
+The desktop interfaces now share an eggshell-white (`#F7F2E7`) and dark-brown (`#3B251C`) design, matching sidebars, guided review steps and plain-language environment forms. Common sandbox tasks use presets; technical reports remain available separately. The same palette applies to desktop prompt panels and the browser extension. See the [interface guide](docs/DESIGN.md) for the changes and platform validation limits.
+
 ## Windows application
 
 The Windows port is in `WindowsApp/`. It provides a background tray application, optional launch at sign-in, advisory desktop prompt overlays using Windows UI Automation, saved privacy environments, local document/image review, DPAPI encrypted exports, and project preparation plus Docker sandbox controls. Chrome/Edge use the shared `BrowserExtension/` prompt overlay.

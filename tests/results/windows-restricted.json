@@ -1,5 +1,5 @@
 {
-  "utc": "2026-11-12T08:38:42.693429+00:00",
+  "utc": "2026-11-16T15:57:21.809353+00:00",
   "scope": "Portable engine, in-memory HTTP handlers (NO TCP claim), Windows parent lifecycle, workspace argument and export checks; NO actual Docker claim",
   "tests_run": 150,
   "passed": 149,

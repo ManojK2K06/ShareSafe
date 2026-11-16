@@ -59,12 +59,13 @@ namespace ShareSafe.Windows {
             readonly TextBox clean = new TextBox { Multiline = true, ReadOnly = true, ScrollBars = ScrollBars.Vertical, Dock = DockStyle.Fill };
             readonly Label message = new Label { AutoSize = false, Height = 58, Dock = DockStyle.Top, Text = "Review this draft locally before sending. Desktop monitoring is advisory and does not block Send." };
             public Overlay(Engine engine, AutomationElement target, string draft, string profile, Preferences prefs, IntPtr window, int pid) {
-                Text = "ShareSafe - prompt review"; TopMost = true; ShowInTaskbar = false; Size = new Size(460, 340); StartPosition = FormStartPosition.Manual;
-                var bar = new FlowLayoutPanel { Dock = DockStyle.Bottom, Height = 80 };
-                var review = new Button { Text = "Review locally", AutoSize = true };
-                var replace = new Button { Text = "Replace draft", AutoSize = true, Enabled = false };
-                var copy = new Button { Text = "Copy prepared", AutoSize = true, Enabled = false };
-                var close = new Button { Text = "Dismiss", AutoSize = true };
+                Text = "ShareSafe · Review before you share"; TopMost = true; ShowInTaskbar = false; Size = new Size(490, 390); StartPosition = FormStartPosition.Manual; Font = Appearance.Body; Padding = new Padding(18);
+                message.Text = "A quick privacy check for your draft. Nothing is sent automatically."; message.Height = 64;
+                var bar = new FlowLayoutPanel { Dock = DockStyle.Bottom, Height = 100, Padding = new Padding(0, 12, 0, 0) };
+                var review = new WarmButton { Text = "Review locally", Primary = true };
+                var replace = new WarmButton { Text = "Replace draft", Primary = true, Enabled = false };
+                var copy = new WarmButton { Text = "Copy prepared", Enabled = false };
+                var close = new WarmButton { Text = "Not now" };
                 bar.Controls.AddRange(new Control[] { review, replace, copy, close }); Controls.Add(clean); Controls.Add(message); Controls.Add(bar);
                 review.Click += async delegate {
                     review.Enabled = false;
@@ -91,6 +92,7 @@ namespace ShareSafe.Windows {
                 };
                 copy.Click += delegate { Clipboard.SetText(clean.Text); message.Text = "Prepared text copied. Paste and review it before sending."; };
                 close.Click += delegate { Close(); };
+                Appearance.Apply(this);
             }
             protected override bool ShowWithoutActivation { get { return true; } }
         }

@@ -42,10 +42,10 @@ namespace ShareSafe.Windows {
             using (var stream = new MemoryStream(bytes)) using (var original = Image.FromStream(stream)) image = new Bitmap(original);
             Boxes = new List<object>(existing); automatic = new List<object>(detected);
             Text = "Review complete image - drag to add redaction rectangles"; Size = new Size(1100, 820); MinimumSize = new Size(650, 500); StartPosition = FormStartPosition.CenterParent;
-            canvas = new PictureBox { Dock = DockStyle.Fill, Image = image, SizeMode = PictureBoxSizeMode.Zoom, BackColor = Color.FromArgb(30, 40, 55) };
+            canvas = new PictureBox { Dock = DockStyle.Fill, Image = image, SizeMode = PictureBoxSizeMode.Zoom, BackColor = Appearance.Eggshell };
             var bar = new FlowLayoutPanel { Dock = DockStyle.Bottom, Height = 58 };
-            var undo = new Button { Text = "Undo rectangle", AutoSize = true }; var done = new Button { Text = "I reviewed the full image", AutoSize = true };
-            var cancel = new Button { Text = "Cancel", AutoSize = true };
+            var undo = new WarmButton { Text = "Undo rectangle" }; var done = new WarmButton { Text = "I reviewed the full image", Primary = true };
+            var cancel = new WarmButton { Text = "Cancel" };
             undo.Click += delegate { if (Boxes.Count > 0) Boxes.RemoveAt(Boxes.Count - 1); canvas.Invalidate(); };
             done.Click += delegate { DialogResult = DialogResult.OK; Close(); }; cancel.Click += delegate { DialogResult = DialogResult.Cancel; Close(); };
             bar.Controls.AddRange(new Control[] { undo, done, cancel }); Controls.Add(canvas); Controls.Add(bar);
@@ -58,11 +58,14 @@ namespace ShareSafe.Windows {
             };
             canvas.Paint += delegate(object sender, PaintEventArgs e) {
                 var rect = ImageRect(); var scale = (float)rect.Width / image.Width;
-                foreach (Dictionary<string, object> box in automatic) Draw(e.Graphics, box, rect, scale, Brushes.OrangeRed);
-                foreach (Dictionary<string, object> box in Boxes) Draw(e.Graphics, box, rect, scale, Brushes.DeepSkyBlue);
-                if (drawing) e.Graphics.DrawRectangle(Pens.DeepSkyBlue, drag);
+                using (var brush = new SolidBrush(Appearance.Brown)) {
+                    foreach (Dictionary<string, object> box in automatic) Draw(e.Graphics, box, rect, scale, brush);
+                    foreach (Dictionary<string, object> box in Boxes) Draw(e.Graphics, box, rect, scale, brush);
+                }
+                if (drawing) using (var pen = new Pen(Appearance.Brown, 2)) e.Graphics.DrawRectangle(pen, drag);
             };
             FormClosed += delegate { canvas.Image = null; image.Dispose(); };
+            Font = Appearance.Body; Appearance.Apply(this);
         }
         Rectangle ImageRect() { var scale = Math.Min((double)canvas.ClientSize.Width / image.Width, (double)canvas.ClientSize.Height / image.Height); var w = (int)(image.Width * scale); var h = (int)(image.Height * scale); return new Rectangle((canvas.Width - w) / 2, (canvas.Height - h) / 2, Math.Max(w, 1), Math.Max(h, 1)); }
         static void Draw(Graphics graphics, Dictionary<string, object> box, Rectangle rect, float scale, Brush brush) {

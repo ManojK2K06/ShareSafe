@@ -11,8 +11,8 @@ import AppKit
     @StateObject var model = AppModel()
     var body: some Scene {
         Window("ShareSafe", id:"workspace") {
-            MainView(model:model).frame(minWidth:1050,minHeight:730)
-        }.defaultSize(width:1200,height:820)
+            MainView(model:model).frame(minWidth:1140,minHeight:780)
+        }.defaultSize(width:1360,height:900)
         MenuBarExtra("ShareSafe", systemImage:"shield.lefthalf.filled") { MenuContent(model:model) }
     }
 }

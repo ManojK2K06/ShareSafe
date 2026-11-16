@@ -18,7 +18,7 @@ import ServiceManagement
     @Published var allowed = "" { didSet { invalidate() } }
     @Published var actions: [String: String] = ["EMAIL":"mask", "PHONE":"mask", "AADHAAR":"mask", "PAN":"mask", "ACCOUNT":"mask", "CARD":"mask", "CREDENTIAL":"block", "PERSON":"mask", "ADDRESS":"mask", "CONFIDENTIAL":"generalize", "FINANCIAL":"generalize"] { didSet { invalidate() } }
     @Published var result: JSON = [:]
-    @Published var decisions: [String: Bool] = [:] { didSet { prepared = ""; imageReviewed = false } }
+    @Published var decisions: [String: Bool] = [:] { didSet { prepared = ""; imageReviewed = false; acknowledged = false } }
     @Published var prepared = ""
     @Published var acknowledged = false { didSet { prepared = "" } }
     @Published var optimize = false { didSet { prepared = "" } }
@@ -35,6 +35,7 @@ import ServiceManagement
     @Published var selectedWorkspace = ""
     @Published var argv = "[\"python\", \"--version\"]"
     @Published var sandboxOutput = ""
+    @Published var sandboxDetails = ""
     @Published var deleteConfirmed = false
     @Published var vaultEntries: [URL] = []
     @Published var activity = ""
@@ -42,6 +43,8 @@ import ServiceManagement
     @Published var monitoring: Bool = UserDefaults.standard.bool(forKey: "monitoring") { didSet { UserDefaults.standard.set(monitoring, forKey: "monitoring") } }
     @Published var bundles = UserDefaults.standard.string(forKey: "bundles") ?? "com.openai.chat\ncom.anthropic.claudefordesktop" { didSet { UserDefaults.standard.set(bundles, forKey: "bundles") } }
     @Published var launchAtLogin = false
+    @Published var environments:[PrivacyEnvironment] = []
+    @Published var activeEnvironmentID = ""
     var bridge: Bridge?
     var vault: Vault?
     var monitor: PromptMonitor?
@@ -59,6 +62,7 @@ import ServiceManagement
             try await engine.start(); self.ready = true
             AppDelegate.cleanup = { [weak self] in self?.monitor?.stop(); self?.bridge?.stop() }
             do { self.vault = try Vault(root: engine.directory); self.refreshVault() } catch { self.notice = error.localizedDescription }
+            do { try await self.restoreEnvironments() } catch { self.error = error.localizedDescription }
             self.monitor = PromptMonitor(model: self); self.monitor?.start()
             self.launchAtLogin = SMAppService.mainApp.status == .enabled
             try await self.refreshWorkspaces()
@@ -152,7 +156,7 @@ import ServiceManagement
     func createWorkspace() async {
         await perform {
             let response = try await self.call("/v1/workspace/create", ["project_id":self.project["project_id"] ?? "", "reviewed":self.projectReviewed])
-            self.selectedWorkspace = response["workspace_id"] as? String ?? ""; self.sandboxOutput = pretty(response); self.project = [:]; self.projectReviewed = false
+            self.selectedWorkspace = response["workspace_id"] as? String ?? ""; self.sandboxDetails = pretty(response); self.sandboxOutput = ReadableReport.sandbox(response); self.project = [:]; self.projectReviewed = false
             try await self.refreshWorkspaces(); self.selection = "Sandbox"
         }
     }
@@ -164,14 +168,15 @@ import ServiceManagement
             if action == "agent" { body["model"] = self.model }
             if action == "delete" { body["confirmed"] = self.deleteConfirmed }
             let response = try await self.call("/v1/workspace/" + action, body)
-            self.sandboxOutput = pretty(response); self.deleteConfirmed = false; try await self.refreshWorkspaces()
+            self.sandboxDetails = pretty(response); self.sandboxOutput = ReadableReport.sandbox(response); self.deleteConfirmed = false; try await self.refreshWorkspaces()
             if action == "delete" { self.selectedWorkspace = "" }
         }
     }
     func refreshVault() { vaultEntries = vault?.list() ?? [] }
     func openVault(_ url: URL) async { await perform { guard let vault = self.vault else { throw ShareSafeError.message("Vault unavailable") }; let (name,data) = try vault.read(url); try Self.save(data, name:name) } }
-    func refreshStatus() async { await perform { self.status = pretty(try await self.call("/v1/status")) } }
-    func refreshActivity() async { await perform { self.activity = pretty(try await self.call("/v1/audit")) } }
+    func exportWorkspace() async { await perform { let response=try await self.call("/v1/workspace/export",["workspace_id":self.selectedWorkspace,"reviewed":true]);let(name,data)=try Self.exportData(response);try Self.save(data,name:name) } }
+    func refreshStatus() async { await perform { self.status = ReadableReport.tools(try await self.call("/v1/status")) } }
+    func refreshActivity() async { await perform { self.activity = ReadableReport.activity(try await self.call("/v1/audit")) } }
     func login(_ enabled: Bool) {
         do { if enabled { try SMAppService.mainApp.register() } else { try SMAppService.mainApp.unregister() }; launchAtLogin = SMAppService.mainApp.status == .enabled }
         catch { self.error = error.localizedDescription; launchAtLogin = SMAppService.mainApp.status == .enabled }

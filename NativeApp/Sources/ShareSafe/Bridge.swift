@@ -109,6 +109,18 @@ func object(_ text: String) throws -> JSON {
         try FileManager.default.setAttributes([.posixPermissions: 0o600], ofItemAtPath: url.path)
     }
     func list() -> [URL] { ((try? FileManager.default.contentsOfDirectory(at: directory, includingPropertiesForKeys: nil)) ?? []).filter { $0.pathExtension == "enc" }.sorted { $0.lastPathComponent > $1.lastPathComponent } }
+    func savePreferences(_ data:Data) throws {
+        let sealed=try AES.GCM.seal(data,using:key,authenticating:Data("sharesafe-environments-v1".utf8))
+        guard let combined=sealed.combined else { throw ShareSafeError.message("Environment encryption failed.") }
+        let url=directory.deletingLastPathComponent().appendingPathComponent("environments.sealed")
+        try combined.write(to:url,options:.atomic)
+        try FileManager.default.setAttributes([.posixPermissions:0o600],ofItemAtPath:url.path)
+    }
+    func loadPreferences() throws -> Data? {
+        let url=directory.deletingLastPathComponent().appendingPathComponent("environments.sealed")
+        guard FileManager.default.fileExists(atPath:url.path) else { return nil }
+        return try AES.GCM.open(AES.GCM.SealedBox(combined:Data(contentsOf:url)),using:key,authenticating:Data("sharesafe-environments-v1".utf8))
+    }
     func read(_ url: URL) throws -> (String, Data) {
         let id = url.deletingPathExtension().lastPathComponent
         let box = try AES.GCM.SealedBox(combined: Data(contentsOf: url))

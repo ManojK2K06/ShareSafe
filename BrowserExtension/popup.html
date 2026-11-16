@@ -1,7 +1,7 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ShareSafe settings</title><link rel="stylesheet" href="popup.css"></head><body>
-<h1>ShareSafe</h1><p>Prompts stay on this computer during local review.</p>
-<label for="token">Browser pairing token</label><input id="token" type="password" autocomplete="off" placeholder="Copy from the native app’s Settings">
-<button id="pair">Pair local app</button><button id="check">Check connection</button>
-<hr><p id="origin">Current website</p><button id="enable">Enable on this AI website</button><button id="disable">Disable custom website</button>
+<div class="eyebrow">ON THIS DEVICE</div><h1>ShareSafe</h1><p>A quieter way to share. Check your prompt before it leaves your browser.</p>
+<h2>1. Connect your app</h2><label for="token">Browser pairing token</label><input id="token" type="password" autocomplete="off" placeholder="Copy from the native app’s Settings">
+<button id="pair">Connect ShareSafe</button><button id="check">Test connection</button>
+<hr><h2>2. Choose this website</h2><p id="origin">Current website</p><button id="enable">Enable on this AI website</button><button id="disable">Turn off for this site</button>
 <p id="message" role="status"></p><small>Known AI sites are enabled automatically. Other HTTPS sites need your approval. Review is advisory; site-specific editors and unusual Send controls can need manual review.</small>
 <script src="popup.js"></script></body></html>

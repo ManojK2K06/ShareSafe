@@ -43,13 +43,14 @@ import CryptoKit
         guard Date().timeIntervalSince(stableSince) >= 1.0, hash != shown, Date() > snoozedUntil, panel == nil else { return }
         shown = hash
         let viewModel = OverlayModel(bridge: model.bridge, element: element, original: draft, app: app) { [weak self] in self?.dismiss() }
-        let panel = NSPanel(contentRect: NSRect(x: 0, y: 0, width: 380, height: 310), styleMask: [.titled, .closable, .nonactivatingPanel], backing: .buffered, defer: false)
+        let panel = NSPanel(contentRect: NSRect(x: 0, y: 0, width: 420, height: 330), styleMask: [.titled, .closable, .nonactivatingPanel], backing: .buffered, defer: false)
         panel.delegate = self
         panel.title = "ShareSafe · Prompt review"; panel.level = .floating; panel.isFloatingPanel = true
         panel.hidesOnDeactivate = false; panel.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
+        panel.backgroundColor = SSPalette.nsEggshell
         panel.contentView = NSHostingView(rootView: PromptOverlay(model: viewModel))
         let screen = NSScreen.screens.first(where: { $0.frame.contains(NSEvent.mouseLocation) }) ?? NSScreen.main
-        if let screen { panel.setFrameOrigin(NSPoint(x:screen.visibleFrame.maxX - 410, y:screen.visibleFrame.maxY - 350)) }
+        if let screen { panel.setFrameOrigin(NSPoint(x:screen.visibleFrame.maxX - 450, y:screen.visibleFrame.maxY - 370)) }
         panel.isReleasedWhenClosed = false; self.panel = panel; panel.orderFrontRegardless()
     }
 }
@@ -84,16 +85,16 @@ import CryptoKit
     @ObservedObject var model: OverlayModel
     var body: some View {
         VStack(alignment:.leading, spacing:12) {
-            Text("Clean this prompt?").font(.headline)
-            Text(model.message).font(.caption).foregroundStyle(.secondary)
+            Text("Review before you share").font(.system(size:23,weight:.medium,design:.serif))
+            Text(model.message).font(.caption).foregroundStyle(SSPalette.brown)
             if model.reviewed { ScrollView { Text(model.clean).textSelection(.enabled).frame(maxWidth:.infinity,alignment:.leading) }.frame(maxHeight:135) }
             if model.busy { ProgressView() }
             HStack {
                 if model.reviewed { Button("Replace prompt") { model.replace() }; Button("Copy prepared") { model.copy() } }
-                else { Button("Review locally") { Task { await model.review() } }.disabled(model.busy) }
-                Button("Dismiss") { model.close() }
+                else { Button("Review locally") { Task { await model.review() } }.ssPrimary().disabled(model.busy) }
+                Button("Not now") { model.close() }
             }
-            Text("Accessibility review is advisory. It does not intercept every app’s Send action.").font(.caption2).foregroundStyle(.secondary)
-        }.padding(18).frame(width:380,height:310)
+            Text("Nothing is sent automatically. Check the draft in the original app before sending.").font(.caption2)
+        }.padding(22).frame(width:420,height:330).background(SSPalette.eggshell).foregroundStyle(SSPalette.brown).tint(SSPalette.brown).buttonStyle(SSButtonStyle()).preferredColorScheme(.light)
     }
 }

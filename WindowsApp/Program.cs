@@ -14,6 +14,7 @@ namespace ShareSafe.Windows {
         [STAThread] static int Main(string[] args) {
             SetProcessDPIAware(); Application.EnableVisualStyles(); Application.SetCompatibleTextRenderingDefault(false);
             var root = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", ".."));
+            if (args.Length > 1 && args[0] == "--render-preview") return DesignPreview.Create(root, Path.GetFullPath(args[1]));
             if (args.Length > 1 && args[0] == "--self-test") return SelfTest(root, args[1]).GetAwaiter().GetResult();
             if (args.Length > 1 && args[0] == "--data-dir") PrivateStore.Root = Path.GetFullPath(args[1]);
             var name = "Local\\ShareSafeWindows-" + WindowsIdentity.GetCurrent().User.Value;
@@ -54,12 +55,12 @@ namespace ShareSafe.Windows {
         readonly MainWindow window; readonly NotifyIcon tray; readonly RegisteredWaitHandle listener;
         public TrayContext(Engine engine, Preferences prefs, bool background, EventWaitHandle wake) {
             window = new MainWindow(engine, prefs); var handle = window.Handle;
-            var menu = new ContextMenuStrip();
+            var menu = new ContextMenuStrip { BackColor = Appearance.Eggshell, ForeColor = Appearance.Brown, Font = Appearance.Body, ShowImageMargin = false, Renderer = new WarmMenuRenderer() };
             menu.Items.Add("Open ShareSafe", null, delegate { Show(); });
             menu.Items.Add("Review clipboard", null, delegate { Show(); window.ReviewClipboard(); });
             menu.Items.Add("Pause desktop overlays", null, delegate { window.PauseMonitoring(); });
             menu.Items.Add(new ToolStripSeparator()); menu.Items.Add("Quit ShareSafe", null, delegate { ExitThread(); });
-            tray = new NotifyIcon { Icon = System.Drawing.SystemIcons.Shield, Text = "ShareSafe - local privacy review", ContextMenuStrip = menu, Visible = true };
+            tray = new NotifyIcon { Icon = Appearance.CreateIcon(), Text = "ShareSafe - local privacy review", ContextMenuStrip = menu, Visible = true };
             tray.DoubleClick += delegate { Show(); };
             listener = ThreadPool.RegisterWaitForSingleObject(wake, delegate { try { window.BeginInvoke((Action)Show); } catch (InvalidOperationException) { } }, null, Timeout.Infinite, false);
             if (!background) Show();
@@ -67,6 +68,6 @@ namespace ShareSafe.Windows {
             once.Tick += async delegate { once.Stop(); once.Dispose(); try { await window.Initialize(); } catch (Exception error) { Show(); MessageBox.Show(window, error.Message, "ShareSafe engine unavailable"); } }; once.Start();
         }
         void Show() { window.Show(); window.WindowState = FormWindowState.Normal; window.Activate(); }
-        protected override void ExitThreadCore() { listener.Unregister(null); tray.Visible = false; tray.Dispose(); window.ExitApplication(); window.Dispose(); base.ExitThreadCore(); }
+        protected override void ExitThreadCore() { listener.Unregister(null); tray.Visible = false; var icon = tray.Icon; tray.Dispose(); icon.Dispose(); window.ExitApplication(); window.Dispose(); base.ExitThreadCore(); }
     }
 }
