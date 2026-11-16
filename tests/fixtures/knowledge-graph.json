@@ -1,0 +1,476 @@
+{
+  "source": "Project Cedar is also known as Grove. Project Cedar coordinates the research work with Project Atlas.\nName: Alex Morgan. Contact alex@example.org for the research brief.\n\nProject Atlas shares a review schedule with Project Orion. Name: Sam Taylor. Send the draft to sam@example.org.\n\nProject Orion is confidential. It links the planning stage to Project Willow and Project Birch. The public report discusses the relationships without exposing internal identifiers.",
+  "graph": {
+    "nodes": [
+      {
+        "id": "project cedar",
+        "label": "Project Cedar",
+        "category": "entity",
+        "mentions": [
+          {
+            "start": 0,
+            "end": 13,
+            "source": "S1"
+          },
+          {
+            "start": 38,
+            "end": 51,
+            "source": "S1"
+          }
+        ],
+        "sensitive": false,
+        "seed_sources": []
+      },
+      {
+        "id": "project atlas",
+        "label": "Project Atlas",
+        "category": "entity",
+        "mentions": [
+          {
+            "start": 87,
+            "end": 100,
+            "source": "S1"
+          },
+          {
+            "start": 171,
+            "end": 184,
+            "source": "S1"
+          }
+        ],
+        "sensitive": false,
+        "seed_sources": []
+      },
+      {
+        "id": "project orion",
+        "label": "Project Orion",
+        "category": "entity",
+        "mentions": [
+          {
+            "start": 215,
+            "end": 228,
+            "source": "S1"
+          },
+          {
+            "start": 284,
+            "end": 297,
+            "source": "S1"
+          }
+        ],
+        "sensitive": true,
+        "seed_sources": [
+          "S1"
+        ]
+      },
+      {
+        "id": "project willow",
+        "label": "Project Willow",
+        "category": "entity",
+        "mentions": [
+          {
+            "start": 346,
+            "end": 360,
+            "source": "S1"
+          }
+        ],
+        "sensitive": true,
+        "seed_sources": [
+          "S1"
+        ]
+      },
+      {
+        "id": "project birch",
+        "label": "Project Birch",
+        "category": "entity",
+        "mentions": [
+          {
+            "start": 365,
+            "end": 378,
+            "source": "S1"
+          }
+        ],
+        "sensitive": true,
+        "seed_sources": [
+          "S1"
+        ]
+      },
+      {
+        "id": "alex@example.org",
+        "label": "alex@example.org",
+        "category": "EMAIL",
+        "mentions": [
+          {
+            "start": 129,
+            "end": 145,
+            "source": "S1"
+          }
+        ],
+        "sensitive": false,
+        "seed_sources": []
+      },
+      {
+        "id": "sam@example.org",
+        "label": "sam@example.org",
+        "category": "EMAIL",
+        "mentions": [
+          {
+            "start": 266,
+            "end": 281,
+            "source": "S1"
+          }
+        ],
+        "sensitive": false,
+        "seed_sources": []
+      },
+      {
+        "id": "alex morgan",
+        "label": "Alex Morgan",
+        "category": "PERSON",
+        "mentions": [
+          {
+            "start": 108,
+            "end": 119,
+            "source": "S1"
+          }
+        ],
+        "sensitive": false,
+        "seed_sources": []
+      },
+      {
+        "id": "sam taylor",
+        "label": "Sam Taylor",
+        "category": "PERSON",
+        "mentions": [
+          {
+            "start": 236,
+            "end": 246,
+            "source": "S1"
+          }
+        ],
+        "sensitive": false,
+        "seed_sources": []
+      },
+      {
+        "id": "grove",
+        "label": "Grove",
+        "category": "entity",
+        "mentions": [
+          {
+            "start": 31,
+            "end": 36,
+            "source": "S1"
+          }
+        ],
+        "sensitive": false,
+        "seed_sources": []
+      }
+    ],
+    "edges": [
+      {
+        "source": "project cedar",
+        "target": "project atlas",
+        "type": "co_occurs",
+        "evidence": "S1"
+      },
+      {
+        "source": "project cedar",
+        "target": "project orion",
+        "type": "co_occurs",
+        "evidence": "S1"
+      },
+      {
+        "source": "project cedar",
+        "target": "project willow",
+        "type": "co_occurs",
+        "evidence": "S1"
+      },
+      {
+        "source": "project cedar",
+        "target": "project birch",
+        "type": "co_occurs",
+        "evidence": "S1"
+      },
+      {
+        "source": "project cedar",
+        "target": "alex@example.org",
+        "type": "co_occurs",
+        "evidence": "S1"
+      },
+      {
+        "source": "project cedar",
+        "target": "sam@example.org",
+        "type": "co_occurs",
+        "evidence": "S1"
+      },
+      {
+        "source": "project cedar",
+        "target": "alex morgan",
+        "type": "co_occurs",
+        "evidence": "S1"
+      },
+      {
+        "source": "project cedar",
+        "target": "sam taylor",
+        "type": "co_occurs",
+        "evidence": "S1"
+      },
+      {
+        "source": "project cedar",
+        "target": "grove",
+        "type": "co_occurs",
+        "evidence": "S1"
+      },
+      {
+        "source": "project atlas",
+        "target": "project orion",
+        "type": "co_occurs",
+        "evidence": "S1"
+      },
+      {
+        "source": "project atlas",
+        "target": "project willow",
+        "type": "co_occurs",
+        "evidence": "S1"
+      },
+      {
+        "source": "project atlas",
+        "target": "project birch",
+        "type": "co_occurs",
+        "evidence": "S1"
+      },
+      {
+        "source": "project atlas",
+        "target": "alex@example.org",
+        "type": "co_occurs",
+        "evidence": "S1"
+      },
+      {
+        "source": "project atlas",
+        "target": "sam@example.org",
+        "type": "co_occurs",
+        "evidence": "S1"
+      },
+      {
+        "source": "project atlas",
+        "target": "alex morgan",
+        "type": "co_occurs",
+        "evidence": "S1"
+      },
+      {
+        "source": "project atlas",
+        "target": "sam taylor",
+        "type": "co_occurs",
+        "evidence": "S1"
+      },
+      {
+        "source": "project atlas",
+        "target": "grove",
+        "type": "co_occurs",
+        "evidence": "S1"
+      },
+      {
+        "source": "project orion",
+        "target": "project willow",
+        "type": "co_occurs",
+        "evidence": "S1"
+      },
+      {
+        "source": "project orion",
+        "target": "project birch",
+        "type": "co_occurs",
+        "evidence": "S1"
+      },
+      {
+        "source": "project orion",
+        "target": "alex@example.org",
+        "type": "co_occurs",
+        "evidence": "S1"
+      },
+      {
+        "source": "project orion",
+        "target": "sam@example.org",
+        "type": "co_occurs",
+        "evidence": "S1"
+      },
+      {
+        "source": "project orion",
+        "target": "alex morgan",
+        "type": "co_occurs",
+        "evidence": "S1"
+      },
+      {
+        "source": "project orion",
+        "target": "sam taylor",
+        "type": "co_occurs",
+        "evidence": "S1"
+      },
+      {
+        "source": "project orion",
+        "target": "grove",
+        "type": "co_occurs",
+        "evidence": "S1"
+      },
+      {
+        "source": "project willow",
+        "target": "project birch",
+        "type": "co_occurs",
+        "evidence": "S1"
+      },
+      {
+        "source": "project willow",
+        "target": "alex@example.org",
+        "type": "co_occurs",
+        "evidence": "S1"
+      },
+      {
+        "source": "project willow",
+        "target": "sam@example.org",
+        "type": "co_occurs",
+        "evidence": "S1"
+      },
+      {
+        "source": "project willow",
+        "target": "alex morgan",
+        "type": "co_occurs",
+        "evidence": "S1"
+      },
+      {
+        "source": "project willow",
+        "target": "sam taylor",
+        "type": "co_occurs",
+        "evidence": "S1"
+      },
+      {
+        "source": "project willow",
+        "target": "grove",
+        "type": "co_occurs",
+        "evidence": "S1"
+      },
+      {
+        "source": "project birch",
+        "target": "alex@example.org",
+        "type": "co_occurs",
+        "evidence": "S1"
+      },
+      {
+        "source": "project birch",
+        "target": "sam@example.org",
+        "type": "co_occurs",
+        "evidence": "S1"
+      },
+      {
+        "source": "project birch",
+        "target": "alex morgan",
+        "type": "co_occurs",
+        "evidence": "S1"
+      },
+      {
+        "source": "project birch",
+        "target": "sam taylor",
+        "type": "co_occurs",
+        "evidence": "S1"
+      },
+      {
+        "source": "project birch",
+        "target": "grove",
+        "type": "co_occurs",
+        "evidence": "S1"
+      },
+      {
+        "source": "alex@example.org",
+        "target": "sam@example.org",
+        "type": "co_occurs",
+        "evidence": "S1"
+      },
+      {
+        "source": "alex@example.org",
+        "target": "alex morgan",
+        "type": "co_occurs",
+        "evidence": "S1"
+      },
+      {
+        "source": "alex@example.org",
+        "target": "sam taylor",
+        "type": "co_occurs",
+        "evidence": "S1"
+      },
+      {
+        "source": "alex@example.org",
+        "target": "grove",
+        "type": "co_occurs",
+        "evidence": "S1"
+      },
+      {
+        "source": "sam@example.org",
+        "target": "alex morgan",
+        "type": "co_occurs",
+        "evidence": "S1"
+      },
+      {
+        "source": "sam@example.org",
+        "target": "sam taylor",
+        "type": "co_occurs",
+        "evidence": "S1"
+      },
+      {
+        "source": "sam@example.org",
+        "target": "grove",
+        "type": "co_occurs",
+        "evidence": "S1"
+      },
+      {
+        "source": "alex morgan",
+        "target": "sam taylor",
+        "type": "co_occurs",
+        "evidence": "S1"
+      },
+      {
+        "source": "alex morgan",
+        "target": "grove",
+        "type": "co_occurs",
+        "evidence": "S1"
+      },
+      {
+        "source": "sam taylor",
+        "target": "grove",
+        "type": "co_occurs",
+        "evidence": "S1"
+      },
+      {
+        "source": "project cedar",
+        "target": "grove",
+        "type": "alias",
+        "evidence": "S1"
+      }
+    ],
+    "communities": [
+      {
+        "id": "C1",
+        "entities": [
+          "alex morgan",
+          "alex@example.org",
+          "grove",
+          "project atlas",
+          "project birch",
+          "project cedar",
+          "project orion",
+          "project willow",
+          "sam taylor",
+          "sam@example.org"
+        ],
+        "sources": [
+          "S1"
+        ],
+        "report": "[S1] Project Cedar is also known as Grove. Project Cedar coordinates the research work with Project Atlas.\nName: Alex Morgan. Contact alex@example.org for the research brief.\n\nProject Atlas shares a review schedule with Project Orion. Name: Sam Taylor. Send the draft to sam@example.org.\n\nProject Orion is confidential. It links the planning stage to Proj"
+      }
+    ],
+    "chunks": [
+      {
+        "id": "S1",
+        "start": 0,
+        "end": 464
+      }
+    ],
+    "method": "Entity co-occurrence and explicit alias graph; connected-component communities; extractive reports; lexical seed retrieval with one-hop expansion"
+  },
+  "fixture": "Synthetic input, actual local engine graph. No model or network."
+}

@@ -5,6 +5,7 @@ import AppKit
     @ObservedObject var model:AppModel
     private let routes=["Review","Environments","Agent Workspace","Sandbox","Vault","Activity","Settings"]
     private let names=["Review & share","Environments","Prepare a project","Sandbox","Encrypted vault","Activity","Settings"]
+    private let icons=["shield.lefthalf.filled","slider.horizontal.3","folder","play.circle","lock.doc","clock.arrow.circlepath","gearshape"]
     private var title:String { ["Review":"Review before you share","Environments":"Your privacy environments","Agent Workspace":"Prepare a safe project","Sandbox":"Work in a sandbox","Vault":"Your encrypted vault","Activity":"Your recent activity","Settings":"Make ShareSafe yours"][model.selection] ?? "ShareSafe" }
     private var subtitle:String { ["Review":"A little more privacy. The same useful context.","Environments":"Save different rules for work, study and personal use.","Agent Workspace":"Give an agent a reviewed copy while keeping your original in place.","Sandbox":"Run tasks on the reviewed copy in an isolated container.","Vault":"Keep reviewed exports protected on this device.","Activity":"See what ShareSafe did without saving your prompts in the log.","Settings":"Set up background review, browser pairing and local tools."][model.selection] ?? "" }
     var body: some View {
@@ -14,11 +15,11 @@ import AppKit
                 Text("A quieter way to share.").font(.callout).padding(.bottom,32)
                 ForEach(Array(routes.enumerated()),id:\.offset) { index,page in
                     Button { model.selection=page } label: {
-                        HStack(spacing:12) { Text(String(format:"%02d",index+1)).font(.caption);Text(names[index]);Spacer(minLength:0) }
+                        HStack(spacing:12) { Image(systemName:icons[index]).font(.system(size:16)).frame(width:20);Text(names[index]);Spacer(minLength:0) }
                             .padding(.horizontal,12).padding(.vertical,14).frame(maxWidth:.infinity,alignment:.leading)
                             .background(model.selection == page ? SSPalette.eggshell : SSPalette.brown)
                             .foregroundStyle(model.selection == page ? SSPalette.brown : SSPalette.eggshell)
-                            .clipShape(RoundedRectangle(cornerRadius:8))
+                            .clipShape(RoundedRectangle(cornerRadius:16))
                     }.buttonStyle(.plain).disabled(model.busy).padding(.bottom,5)
                 }
                 Spacer()
@@ -65,14 +66,15 @@ import AppKit
                 SSReviewSteps(step:model.session == nil ? 0 : canSave ? 2 : 1)
                 SSCard("Your content",subtitle:"Paste a prompt or choose a document or screenshot. Your original file stays in place.") {
                     HStack {
-                        Button("Choose a file") { Task { await model.importFile() } }
-                        Button("Paste text") { model.pasteClipboard() }
-                        Button("Start over") { model.clear() }
+                        Button { Task { await model.importFile() } } label:{Label("Choose a file",systemImage:"folder")}
+                        Button { model.pasteClipboard() } label:{Label("Paste text",systemImage:"doc.on.clipboard")}
+                        Button { model.clear() } label:{Label("Start over",systemImage:"arrow.counterclockwise")}
+                        Button { model.openKnowledgeBase() } label:{Label("Knowledge base",systemImage:"circle.hexagongrid")}.disabled(model.session == nil)
                         Spacer()
                         Button("Edit privacy rules") { model.selection="Environments" }
                     }
                     TextEditor(text:$model.text).font(.body).frame(height:145).ssInput().accessibilityLabel("Source input")
-                    Button("Check for sensitive information") { Task { await model.analyze() } }.ssPrimary().disabled(model.text.trimmingCharacters(in:.whitespacesAndNewlines).isEmpty)
+                    Button { Task { await model.analyze() } } label:{Label("Check for sensitive information",systemImage:"checkmark.shield")}.ssPrimary().disabled(model.text.trimmingCharacters(in:.whitespacesAndNewlines).isEmpty)
                 }
                 if model.session != nil {
                     SSCard("Suggested changes",subtitle:"\(model.findings.count) supported finding(s). Read each suggestion and choose what to change.") {
@@ -92,7 +94,7 @@ import AppKit
                         }
                     } else {
                         SSCard("Your safe preview",subtitle:"Read the exact text you will save. Review every part before sharing it.") {
-                            Button("Create safe preview") { Task { await model.preview() } }.ssPrimary().disabled(blocked)
+                            Button { Task { await model.preview() } } label:{Label("Create safe preview",systemImage:"doc.text.magnifyingglass")}.ssPrimary().disabled(blocked)
                             ScrollView { Text(model.prepared.isEmpty ? "Your prepared text will appear here after you create a preview." : model.prepared).textSelection(.enabled).frame(maxWidth:.infinity,alignment:.leading).padding(12) }.frame(minHeight:100,maxHeight:220).ssInput()
                         }
                     }
@@ -101,8 +103,8 @@ import AppKit
                         Toggle("Add instructions for a more grounded AI response",isOn:$model.optimize)
                         HStack {
                             if model.image == nil { Picker("Save as",selection:$format) { Text("Text (.txt)").tag("txt");Text("Word (.docx)").tag("docx");Text("PDF (.pdf)").tag("pdf") }.frame(width:200) }
-                            Button("Save a copy") { Task { await model.export(format) } }.ssPrimary().disabled(!canSave)
-                            Button("Keep in encrypted vault") { Task { await model.export(format,toVault:true) } }.disabled(!canSave)
+                            Button { Task { await model.export(format) } } label:{Label("Save a copy",systemImage:"square.and.arrow.down")}.ssPrimary().disabled(!canSave)
+                            Button { Task { await model.export(format,toVault:true) } } label:{Label("Keep in encrypted vault",systemImage:"lock.doc")}.disabled(!canSave)
                         }
                     }
                 }

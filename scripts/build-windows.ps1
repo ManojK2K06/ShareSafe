@@ -3,7 +3,8 @@ param(
     [switch]$SkipDependencies,
     [switch]$UseRuntimePackages,
     [string]$OfflineDependencyPath,
-    [switch]$Package
+    [switch]$Package,
+    [string]$OutputName = 'ShareSafe.Windows.exe'
 )
 $ErrorActionPreference = 'Stop'
 $repo = Split-Path $PSScriptRoot -Parent
@@ -31,6 +32,12 @@ $compiler = Join-Path $framework 'csc.exe'
 if (-not (Test-Path -LiteralPath $compiler)) { throw '.NET Framework 4.8 and the Windows C# compiler are required.' }
 $destination = Join-Path $repo 'WindowsApp\bin'
 New-Item -ItemType Directory -Path $destination -Force | Out-Null
+if ($OutputName -notmatch '^ShareSafe[.A-Za-z0-9-]*\.exe$') { throw 'Use a ShareSafe executable filename without directory components.' }
+$executable = Join-Path $destination $OutputName
+if ($OutputName -eq 'ShareSafe.Windows.exe' -and (Test-Path -LiteralPath $executable)) {
+    try { $buildProbe = [IO.File]::Open($executable, [IO.FileMode]::Open, [IO.FileAccess]::Write, [IO.FileShare]::None); $buildProbe.Dispose() }
+    catch [IO.IOException] { $OutputName = 'ShareSafe.Windows.Pending.exe'; $executable = Join-Path $destination $OutputName; Write-Host 'The app is running. Building a pending update; quit the tray app before relaunching.' }
+}
 $sources = @(Get-ChildItem -LiteralPath (Join-Path $repo 'WindowsApp') -Filter '*.cs' | Select-Object -ExpandProperty FullName)
 $references = @('System.dll','System.Core.dll','System.Drawing.dll','System.Windows.Forms.dll','System.Web.Extensions.dll','System.Net.Http.dll','System.Security.dll','WindowsBase.dll')
 $refs = @($references | ForEach-Object {
@@ -40,9 +47,9 @@ $refs = @($references | ForEach-Object {
 })
 $refs += '/reference:' + (Join-Path $framework 'WPF\UIAutomationClient.dll')
 $refs += '/reference:' + (Join-Path $framework 'WPF\UIAutomationTypes.dll')
-& $compiler /nologo /target:winexe /platform:x64 /optimize+ ('/out:' + (Join-Path $destination 'ShareSafe.Windows.exe')) @refs @sources
+& $compiler /nologo /target:winexe /platform:x64 /optimize+ ('/out:' + $executable) @refs @sources
 if ($LASTEXITCODE -ne 0) { throw 'The Windows application did not compile.' }
-Copy-Item -LiteralPath (Join-Path $repo 'WindowsApp\ShareSafe.exe.config') -Destination (Join-Path $destination 'ShareSafe.Windows.exe.config') -Force
+Copy-Item -LiteralPath (Join-Path $repo 'WindowsApp\ShareSafe.exe.config') -Destination ($executable + '.config') -Force
 if ($Package) {
     & $venvPython -m pip install 'pyinstaller>=6,<7'
     if ($LASTEXITCODE -ne 0) { throw 'PyInstaller installation failed.' }
@@ -57,4 +64,4 @@ if ($Package) {
     Copy-Item -LiteralPath (Join-Path $repo 'Start-ShareSafe.cmd') -Destination $bundle -Force
     Compress-Archive -Path (Join-Path $bundle '*') -DestinationPath (Join-Path $repo 'build\windows\ShareSafe-Windows-x64.zip') -Force
 }
-Write-Host ('Windows app built: ' + (Join-Path $destination 'ShareSafe.Windows.exe'))
+Write-Host ('Windows app built: ' + $executable)

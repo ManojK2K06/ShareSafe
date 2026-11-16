@@ -4,7 +4,7 @@ import AppKit
 @MainActor struct HighlightedSource: NSViewRepresentable {
     let text: String; let findings: [JSON]
     func makeNSView(context:Context) -> NSScrollView {
-        let scroll=NSScrollView();scroll.hasVerticalScroller=true
+        let scroll=NSScrollView();scroll.hasVerticalScroller=true;scroll.wantsLayer=true;scroll.layer?.cornerRadius=16;scroll.layer?.masksToBounds=true
         let editor=NSTextView();editor.isEditable=false;editor.isSelectable=true;editor.isRichText=true
         editor.isVerticallyResizable=true;editor.isHorizontallyResizable=false;editor.autoresizingMask=[.width]
         editor.textContainer?.widthTracksTextView=true;editor.textContainerInset=NSSize(width:12,height:12)
@@ -34,25 +34,13 @@ import AppKit
                 let graph = model.result["graph"] as? JSON ?? [:]
                 let nodes = graph["nodes"] as? [JSON] ?? []
                 let edges = graph["edges"] as? [JSON] ?? []
-                GraphCanvas(nodes:nodes,edges:edges).frame(height:200)
+                Text("\(nodes.count) entities · \(edges.count) recorded relationships").font(.headline)
+                Button { model.openKnowledgeBase() } label:{Label("Open knowledge base",systemImage:"circle.hexagongrid")}.ssPrimary()
+                Text("Explore the radial graph in its own window. Expand branches, drag nodes, zoom and inspect the evidence behind each link.").font(.callout)
                 DisclosureGroup("Technical graph details") { Text(pretty(graph)).font(.system(.caption,design:.monospaced)).textSelection(.enabled) }
                 HStack { TextField("Ask about your source",text:$model.question); Button("Retrieve evidence") { Task { await model.query() } } }
                 Text(model.evidence).font(.system(.caption,design:.monospaced)).textSelection(.enabled)
             }.padding()
-        }
-    }
-}
-@MainActor struct GraphCanvas: View {
-    let nodes: [JSON]; let edges: [JSON]
-    var body: some View {
-        GeometryReader { geometry in
-            Canvas { context, size in
-                let limited = Array(nodes.prefix(24))
-                func point(_ index:Int) -> CGPoint { let angle = Double(index) / Double(max(limited.count,1)) * .pi * 2; return CGPoint(x:size.width/2+cos(angle)*(size.width/2-85),y:size.height/2+sin(angle)*(size.height/2-30)) }
-                let ids = limited.map { String(describing:$0["id"] ?? "") }
-                for edge in edges { if let a = ids.firstIndex(of:String(describing:edge["source"] ?? "")), let b = ids.firstIndex(of:String(describing:edge["target"] ?? "")) { var path=Path(); path.move(to:point(a)); path.addLine(to:point(b)); context.stroke(path,with:.color(SSPalette.brown),lineWidth:1) } }
-                for (index,node) in limited.enumerated() { let p=point(index); context.fill(Path(ellipseIn:CGRect(x:p.x-5,y:p.y-5,width:10,height:10)),with:.color(SSPalette.brown)); context.draw(Text(String(describing:node["label"] ?? node["name"] ?? node["id"] ?? "Entity")).font(.caption2).foregroundStyle(SSPalette.brown),at:CGPoint(x:p.x,y:p.y+15)) }
-            }
         }
     }
 }

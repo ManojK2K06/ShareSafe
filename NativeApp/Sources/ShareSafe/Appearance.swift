@@ -14,8 +14,8 @@ struct SSButtonStyle: ButtonStyle {
     func makeBody(configuration:Configuration) -> some View {
         configuration.label.font(.system(size:13,weight:.medium)).padding(.horizontal,16).padding(.vertical,10)
             .foregroundStyle(SSPalette.brown).background(SSPalette.eggshell)
-            .clipShape(RoundedRectangle(cornerRadius:8))
-            .overlay(RoundedRectangle(cornerRadius:8).stroke(SSPalette.brown,lineWidth:configuration.isPressed ? 2 : 1))
+            .clipShape(RoundedRectangle(cornerRadius:16))
+            .overlay(RoundedRectangle(cornerRadius:16).stroke(SSPalette.brown,lineWidth:configuration.isPressed ? 2 : 1))
     }
 }
 struct SSPrimaryButtonStyle: ButtonStyle {
@@ -24,21 +24,21 @@ struct SSPrimaryButtonStyle: ButtonStyle {
         configuration.label.font(.system(size:13,weight:.semibold)).padding(.horizontal,18).padding(.vertical,11)
             .foregroundStyle(enabled ? SSPalette.eggshell : SSPalette.brown)
             .background(enabled ? SSPalette.brown : SSPalette.eggshell)
-            .clipShape(RoundedRectangle(cornerRadius:8))
-            .overlay(RoundedRectangle(cornerRadius:8).stroke(SSPalette.brown,style:StrokeStyle(lineWidth:1,dash:enabled ? [] : [3,3])))
+            .clipShape(RoundedRectangle(cornerRadius:16))
+            .overlay(RoundedRectangle(cornerRadius:16).stroke(SSPalette.brown,style:StrokeStyle(lineWidth:1,dash:enabled ? [] : [3,3])))
     }
 }
 struct SSInput: ViewModifier {
     func body(content:Content) -> some View {
         content.scrollContentBackground(.hidden).padding(10).background(SSPalette.eggshell)
-            .clipShape(RoundedRectangle(cornerRadius:8))
-            .overlay(RoundedRectangle(cornerRadius:8).stroke(SSPalette.brown,lineWidth:1))
+            .clipShape(RoundedRectangle(cornerRadius:16))
+            .overlay(RoundedRectangle(cornerRadius:16).stroke(SSPalette.brown,lineWidth:1))
     }
 }
 struct SSTextFieldStyle: TextFieldStyle {
     func _body(configuration:TextField<Self._Label>) -> some View {
         configuration.textFieldStyle(.plain).padding(9).background(SSPalette.eggshell)
-            .clipShape(RoundedRectangle(cornerRadius:8)).overlay(RoundedRectangle(cornerRadius:8).stroke(SSPalette.brown,lineWidth:1))
+            .clipShape(RoundedRectangle(cornerRadius:16)).overlay(RoundedRectangle(cornerRadius:16).stroke(SSPalette.brown,lineWidth:1))
     }
 }
 extension View {
@@ -56,7 +56,7 @@ struct SSCard<Content:View>: View {
             if !subtitle.isEmpty { Text(subtitle).font(.callout).fixedSize(horizontal:false,vertical:true) }
             content
         }.padding(20).frame(maxWidth:.infinity,alignment:.leading).background(SSPalette.eggshell)
-            .clipShape(RoundedRectangle(cornerRadius:12)).overlay(RoundedRectangle(cornerRadius:12).stroke(SSPalette.brown,lineWidth:1))
+            .clipShape(RoundedRectangle(cornerRadius:24)).overlay(RoundedRectangle(cornerRadius:24).stroke(SSPalette.brown,lineWidth:1))
     }
 }
 struct SSReviewSteps: View {

@@ -27,9 +27,10 @@ namespace ShareSafe.Windows {
         readonly ComboBox workspaces = new WarmComboBox { DropDownStyle = ComboBoxStyle.DropDownList, Width = 350 };
         readonly TextBox command = new TextBox { Text = "[\"python\",\"--version\"]", Width = 390 };
         readonly TextBox sandboxOutput = Editor(true), activity = Editor(true), question = new TextBox { Width = 350 };
-        readonly ListBox vault = new ListBox { Dock = DockStyle.Fill };
+        readonly ListBox vault = new WarmListBox { Dock = DockStyle.Fill };
         string session, projectId, importedName; byte[] imported;
         Dictionary<string, object> analysis, plan;
+        KnowledgeWindow knowledgeWindow;
         List<object> manualBoxes = new List<object>(); bool imageReviewed, changing, exiting; int generation;
         public PromptMonitor Monitor { get; private set; }
         public MainWindow(Engine bridge, Preferences settings) {
@@ -49,14 +50,14 @@ namespace ShareSafe.Windows {
             Monitor = new PromptMonitor(this, engine, prefs);
             source.AccessibleName = "Source input"; prepared.AccessibleName = "Prepared preview"; evidence.AccessibleName = "Graph and source evidence"; vault.AccessibleName = "Encrypted reviewed exports";
             RefreshEnvironmentChoices(); LoadEnvironment(); RefreshVault();
-            BuildShell(); Appearance.Apply(this); RefreshWorkflow();
+            BuildShell(); Appearance.RoundInputs(this); Appearance.Apply(this); RefreshWorkflow();
         }
         public async Task Initialize() {
             await engine.Start(); await engine.Apply(prefs.Active); Monitor.Start();
             status.Text = "Local engine ready. Closing this window keeps ShareSafe running in the tray.";
             RefreshWorkflow();
         }
-        public void ExitApplication() { exiting = true; Monitor.Dispose(); Close(); }
+        public void ExitApplication() { exiting = true; if(knowledgeWindow!=null)knowledgeWindow.Close(); Monitor.Dispose(); Close(); }
         public void ReviewClipboard() { tabs.SelectedIndex = 0; source.Text = Clipboard.ContainsText() ? Clipboard.GetText() : ""; }
         public void PauseMonitoring() { monitoring.Checked = false; prefs.Monitoring = false; PrivateStore.Save(prefs); Monitor.Dismiss(); }
         static TextBox Editor(bool readOnly = false) { return new TextBox { Dock = DockStyle.Fill, Multiline = true, ScrollBars = ScrollBars.Vertical, AcceptsReturn = true, AcceptsTab = true, ReadOnly = readOnly, WordWrap = true, Font = Appearance.Body }; }
@@ -75,17 +76,18 @@ namespace ShareSafe.Windows {
         static Label Note(string text, int height = 48) { return new Label { Text = text, Dock = DockStyle.Top, Height = height, Padding = new Padding(0, 5, 0, 5) }; }
         static SplitContainer Split(Control left, Control right, Orientation direction = Orientation.Vertical) { var split = new SplitContainer { Size = new Size(1000, 600), Dock = DockStyle.Fill, Orientation = direction }; split.Panel1.Controls.Add(left); split.Panel2.Controls.Add(right); return split; }
         void InvalidateReview() {
+            if(knowledgeWindow!=null)knowledgeWindow.Close();
             generation++; session = null; analysis = null; prepared.Clear(); evidence.Clear(); findings.Rows.Clear(); manualBoxes.Clear(); imageReviewed = false; acknowledge.Checked = false;
             RefreshWorkflow();
         }
         void InvalidateProject() { projectId = null; plan = null; projectReviewed.Checked = false; projectFiles.Items.Clear(); projectText.Clear(); projectReport.Clear(); RefreshWorkflow(); }
         void ReviewPage() {
-            var page = Page("Review"); var bar = Bar(106);
+            var page = Page("Review"); var bar = Bar(132);
             format.Items.AddRange(new object[] { "txt", "docx", "pdf" }); format.SelectedIndex = 0;
             bar.Controls.AddRange(new Control[] {
                 ActionButton("Choose a file", Import), ActionButton("Paste text", delegate { source.Text = Clipboard.ContainsText() ? Clipboard.GetText() : ""; return Task.FromResult(0); }),
                 ActionButton("Check for sensitive information", Analyze), ActionButton("Create safe preview", Preview), ActionButton("Review image", ImageReview),
-                ActionButton("Start over", async delegate { if (session != null) await engine.Request("/v1/forget", new { session_id = session }); changing = true; source.Clear(); imported = null; changing = false; InvalidateReview(); })
+                ActionButton("Start over", async delegate { if (session != null) await engine.Request("/v1/forget", new { session_id = session }); changing = true; source.Clear(); imported = null; changing = false; InvalidateReview(); }), ActionButton("Knowledge base",delegate { OpenKnowledgeBase(); return Task.FromResult(0); })
             });
             acknowledge.Text = "I accept the risks of anything I chose to keep"; optimize.Text = "Add instructions for a more grounded AI response";
             foreach (var column in new[] { "Category", "Action", "Value", "Reason" }) findings.Columns.Add(new DataGridViewTextBoxColumn { Name = column, HeaderText = column, ReadOnly = true });
@@ -95,7 +97,7 @@ namespace ShareSafe.Windows {
             var detail = new WarmTabs { Dock = DockStyle.Fill }; var f = new TabPage("Suggested changes"); f.Controls.Add(findings); detail.TabPages.Add(f);
             var evidenceTab = new TabPage("Why these changes?"); var qbar = Bar(); qbar.Controls.AddRange(new Control[] { question, ActionButton("Find source evidence", async delegate {
                 RequireReview(); evidence.Text = Pretty(await engine.Request("/v1/query", new { session_id = session, question = question.Text, use_model = false }));
-            }), ActionButton("Graph details", delegate { RequireReview(); lastDetails = analysis; ShowTechnicalDetails(); return Task.FromResult(0); }) }); evidenceTab.Controls.Add(evidence); evidenceTab.Controls.Add(qbar); detail.TabPages.Add(evidenceTab);
+            }), ActionButton("Knowledge base", delegate { OpenKnowledgeBase(); return Task.FromResult(0); }) }); evidenceTab.Controls.Add(evidence); evidenceTab.Controls.Add(qbar); detail.TabPages.Add(evidenceTab);
             var split = Split(editors, detail, Orientation.Horizontal); split.SplitterDistance = 310;
             var save = Bar(106); save.Dock = DockStyle.Bottom;
             save.Controls.AddRange(new Control[] { acknowledge, optimize }); save.SetFlowBreak(optimize, true);
@@ -103,6 +105,11 @@ namespace ShareSafe.Windows {
             page.Controls.Add(split); page.Controls.Add(save); page.Controls.Add(bar);
             prepared.TextChanged += delegate { RefreshWorkflow(); };
             findings.CellFormatting += delegate(object sender, DataGridViewCellFormattingEventArgs e) { if (e.RowIndex >= 0 && (e.ColumnIndex == findings.Columns["Category"].Index || e.ColumnIndex == findings.Columns["Action"].Index)) { e.Value = Friendly(Convert.ToString(e.Value)); e.FormattingApplied = true; } };
+        }
+        void OpenKnowledgeBase() {
+            RequireReview();if(knowledgeWindow!=null&&!knowledgeWindow.IsDisposed){knowledgeWindow.Activate();return;}
+            var graph=analysis.ContainsKey("graph")?analysis["graph"] as Dictionary<string,object>:null;
+            knowledgeWindow=new KnowledgeWindow(graph??new Dictionary<string,object>(),Json.Str(analysis,"text"));knowledgeWindow.FormClosed+=delegate{knowledgeWindow=null;};if(previewMode){knowledgeWindow.StartPosition=FormStartPosition.Manual;knowledgeWindow.Location=new Point(-24000,-24000);}knowledgeWindow.Show(this);
         }
         async Task Import() {
             using (var dialog = new OpenFileDialog { Filter = "Supported inputs|*.txt;*.md;*.csv;*.json;*.docx;*.pdf;*.png;*.jpg;*.jpeg;*.webp" }) {

@@ -48,6 +48,7 @@ import ServiceManagement
     var bridge: Bridge?
     var vault: Vault?
     var monitor: PromptMonitor?
+    var knowledgeWindow: KnowledgeWindowController?
     private var upload: JSON?
     private var revision = 0
     private var projectRevision = 0
@@ -77,6 +78,7 @@ import ServiceManagement
         guard ready, let bridge else { throw ShareSafeError.message("The local service is starting.") }; return try await bridge.request(path, body)
     }
     func invalidate() {
+        knowledgeWindow?.close();knowledgeWindow=nil
         revision += 1
         if let session, let bridge { Task { _ = try? await bridge.request("/v1/forget", ["session_id": session]) } }
         result = [:]; prepared = ""; evidence = ""; imageReviewed = false; manualBoxes = []; acknowledged = false

@@ -36,7 +36,7 @@ namespace ShareSafe.Windows {
             var brand = new Label { Text = "ShareSafe", Font = new Font("Georgia", 25), Height = 54, Dock = DockStyle.Top };
             var subtitle = new Label { Text = "A quieter way to share.", Height = 50, Dock = DockStyle.Top };
             var links = new FlowLayoutPanel { Dock = DockStyle.Fill, FlowDirection = FlowDirection.TopDown, WrapContents = false, Padding = new Padding(0, 18, 0, 0) };
-            string[] labels = { "01   Review & share", "02   Environments", "03   Prepare a project", "04   Sandbox", "05   Encrypted vault", "06   Activity", "07   Settings" };
+            string[] labels = { "Review & share", "Environments", "Prepare a project", "Sandbox", "Encrypted vault", "Activity", "Settings" };
             for (int i = 0; i < labels.Length; i++) {
                 var index = i; var button = new WarmButton { Text = labels[i], Width = 187, Height = 48, AutoSize = false, Selected = i == 0, Inverted = true, Font = new Font("Segoe UI", 10.5f) };
                 button.Click += delegate { tabs.SelectedIndex = index; }; navigationButtons.Add(button); links.Controls.Add(button);
@@ -59,6 +59,7 @@ namespace ShareSafe.Windows {
                     case "Check for sensitive information": button.Enabled = (engine.Ready || previewMode) && (imported != null || source.Text.Trim().Length > 0); break;
                     case "Create safe preview": button.Enabled = hasReview && !blocked && !image; break;
                     case "Review image": button.Enabled = hasReview && image; break;
+                    case "Knowledge base": button.Enabled = hasReview; break;
                     case "Save a copy": case "Keep in encrypted vault": button.Enabled = save; break;
                     case "Export reviewed ZIP": case "Create sandbox": button.Enabled = projectId != null && projectReviewed.Checked; break;
                     case "Verify copy": case "Run selected task": case "Run task with local AI": case "Export reviewed result": case "Delete sandbox": button.Enabled = workspaces.SelectedItem != null; break;
@@ -77,7 +78,7 @@ namespace ShareSafe.Windows {
         }
         sealed class ActionChoice { public string Value { get; set; } public string Label { get; set; } }
         void BuildEnvironmentPage() {
-            var page = Page("Environments"); var bar = Bar(108);
+            var page = Page("Environments"); var bar = Bar(132);
             environmentName.Text = ""; environmentName.AccessibleName = "Name for a new environment";
             bar.Controls.AddRange(new Control[] { environments, ActionButton("Use selected environment", async delegate {
                 var profile = prefs.Environments.Find(x => x.Name == environments.Text); if (profile == null) return;
